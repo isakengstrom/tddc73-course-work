@@ -7,7 +7,6 @@ By Isak Engström (isaen688@student.liu.se) and Vera Fristedt Andersson (veran87
 
 ## Course overview
 
-***
 The course consist of **three labs** and a **mini project**:
 
 - **Lab1** - Layout using [Kotlin](https://kotlinlang.org/), [Flutter](https://flutter.dev/) and [React-Native](https://reactnative.dev/).
@@ -21,7 +20,6 @@ The course consist of **three labs** and a **mini project**:
 
 ## The Mini Project
 
-***
 Lorem ipsum..
 ***
 >
