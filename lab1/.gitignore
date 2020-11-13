@@ -1,3 +1,6 @@
 # SDK cache
 .vscode
 .idea
+
+# React native
+node_modules/**/*
