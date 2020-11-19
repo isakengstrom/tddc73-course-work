@@ -11,7 +11,8 @@ The course consist of **three labs** and a **mini project**:
 
 - **Lab1** - Layout using [Flutter](https://flutter.dev/), [Kotlin](https://kotlinlang.org/)  and [React-Native](https://reactnative.dev/). 
 
-     - [Lab1 - Results](https://github.com/bioengstrom/tddc73-course-work/blob/master/lab1/README.md)
+     - [Lab1 - Results](lab1/README.md)
+     
 - **Lab2** - Complex layout and interaction.
 - **Lab3** - Communication with [GitHub](https://github.com/) using [REST](https://restfulapi.net/)/[GraphQL](https://graphql.org/)
 - **Mini project** - Implementation of a mini SDK.
