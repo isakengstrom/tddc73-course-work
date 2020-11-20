@@ -5,11 +5,10 @@ import styles from './Styles.js';
 
 const Creditcard = () => {
     return (
-    <View style={styles.ccContainer}>
-        
-        <Image style={styles.ccImage} source={require("./../assets/images/1.jpeg")} />
-        <Text>Creditcard</Text>
-    </View>
+        <View style={styles.ccContainer}>
+            <Image style={styles.ccImage} source={require("./../assets/images/1.jpeg")} />
+            <Text>Creditcard</Text>
+        </View>
     )
 }
 

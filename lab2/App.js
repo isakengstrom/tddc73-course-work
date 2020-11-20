@@ -1,20 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 import styles from './components/Styles';
 import Creditcard from './components/Creditcard';
 import InputField from './components/InputField';
 
-export default function App() {
+const App = () => {
+  const [activeField, setActiveField] = useState(0);
+
+  const deactivateFocus = () => {
+    setActiveField(0);
+    Keyboard.dismiss();
+  }
+
   return (
-    <View style={styles.container}>
-      <Creditcard />
-      <InputField />
-     
-      <StatusBar style="auto" />
-    </View>
+    <TouchableWithoutFeedback onPress={deactivateFocus} accessible={false}>
+      <View style={styles.container}>
+        <Creditcard />
+        <InputField activeField={activeField} setActiveField={setActiveField}/>
+      
+        <StatusBar style="auto" />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
-
+export default App;
