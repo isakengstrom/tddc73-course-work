@@ -61,40 +61,55 @@ const InputField = (props) =>  {
         setActiveField(0);
     }
 
-  
-    const setText = (text, id) => {
-        if(id == 1){
-            props.setCardText((prevState) => {
-                return {...prevState,  number: text}
-            })
+    const updateCardInfo = (fieldId, text) => {
+        let fieldName = '';
+        let temp = '';
+        if(fieldId == 1){
+            fieldName = 'number';
+            text = filterNumbers(text);
+            text = addSpaces(text);
         }
-        else if (id == 2){
-            props.setCardText((prevState) => {
-                return {...prevState,  name: text}
-            })
+        else if (fieldId == 2){
+            fieldName = 'name';
         }
         else {
-            props.setCardText((prevState) => {
-                return {...prevState,  cvv: text}
-            })
+            fieldName = 'cvv';
+            text = filterNumbers(text);
         }
+        
+        props.updateCardInfo(fieldName, text);
     }
 
+    const filterNumbers = (text) => {
+        return (text.replace(/[^0-9]/g, ''));
+    }
 
+    const addSpaces = (text) => {
+        //if(text.length % 4 == 0) return text + " ";
+        let formattedText = text.split(' ').join('');
+        if (formattedText.length > 0) {
+            formattedText = formattedText.match(new RegExp('.{1,4}', 'g')).join(' ');
+        }
+        
+        return formattedText;
+    }
+    
     return (
         <View style={styles.ifContainer}>
             <Text style={styles.ifText}>Card Number</Text>
             <TextInput  
                 style={[styles.ifFields, props.activeField == 1 ? styles.fieldActive : null]}
-                defaultValue={props.cardText.number}
-                onChangeText={() => setText(props.cardText.number, 1)}
+                value={props.cardInfo.number}
+                onChangeText={(text) => updateCardInfo(1, text)}
                 onFocus={() => setActiveField(1)}
+                maxLength={19}
+                //keyboardType={'number-pad'}
             />
             <Text style={styles.ifText}>Card Name</Text>
             <TextInput
                 style={[styles.ifFields, props.activeField == 2 ? styles.fieldActive : null]}
-                defaultValue={props.cardText.name}
-                onChangeText={() => setText(props.cardText.name, 2)}
+                value={props.cardInfo.name}
+                onChangeText={(text) => updateCardInfo(2, text)}
                 onFocus={() => setActiveField(2)}
             />
             <View style={{flexDirection: "row", zIndex: 2}}>
@@ -129,9 +144,11 @@ const InputField = (props) =>  {
                     <Text style={styles.ifText}>CVV</Text>
                     <TextInput
                         style={[styles.ifFields, props.activeField == 5 ? styles.fieldActive : null]}
-                        defaultValue={props.cardText.cvv}
-                        onChangeText={() => setText(props.cardText.cvv, 5)}
+                        value={props.cardInfo.cvv}
+                        onChangeText={(text) => updateCardInfo(5, text)}
                         onFocus={() => setActiveField(5)}
+                        maxLength={4}
+                        //keyboardType={'number-pad'}
                     />
                 </View>
             </View>

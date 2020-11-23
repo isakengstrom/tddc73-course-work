@@ -8,18 +8,34 @@ import InputField from './components/InputField';
 
 const App = () => {
   const [activeField, setActiveField] = useState(0);
-  const [cardText, setCardText] = useState({number: '', name: '', cvv: ''});
-
+  const [cardInfo, setCardInfo] = useState({number: '', name: '', cvv: ''});
+  
   const deactivateFocus = () => {
     setActiveField(0);
     Keyboard.dismiss();
   }
 
+  const updateCardInfo = (stateName, value) => {
+    setCardInfo({
+      ...cardInfo,
+      [stateName]: value || '',
+    });
+    
+    console.log("stateName: " + stateName + " text: " + value);
+  };
+
+
   return (
     <TouchableWithoutFeedback onPress={deactivateFocus} accessible={false}>
       <View style={styles.container}>
         <Creditcard />
-        <InputField activeField={activeField} setActiveField={setActiveField} cardText={cardText} setCardText={setCardText} />
+        <InputField 
+          activeField={activeField} 
+          setActiveField={setActiveField} 
+          
+          cardInfo={cardInfo} 
+          updateCardInfo={updateCardInfo}  
+        />
       
         <StatusBar style="auto" />
       </View>
