@@ -40,16 +40,10 @@ const yearArray = [
     {label: '2029', value: '2029'},
 ];
 
-
-
 const InputField = (props) =>  {
     const setActivePickerField = (fieldIndex) => {
         Keyboard.dismiss();
-        
-        // Adds a small delay for the pickers, otherwise, the keyboard dismiss messes up the the focused item
-        setTimeout(() => {
-            setActiveField(fieldIndex);
-        }, 5);
+        setActiveField(fieldIndex);
     }
 
     const setActiveField = (fieldIndex) => {
@@ -68,14 +62,13 @@ const InputField = (props) =>  {
     }
 
   
-
-    const setText = (text, ind) => {
-        if(ind == 1){
+    const setText = (text, id) => {
+        if(id == 1){
             props.setCardText((prevState) => {
                 return {...prevState,  number: text}
             })
         }
-        else if (ind == 2){
+        else if (id == 2){
             props.setCardText((prevState) => {
                 return {...prevState,  name: text}
             })
@@ -88,8 +81,6 @@ const InputField = (props) =>  {
     }
 
 
-
-
     return (
         <View style={styles.ifContainer}>
             <Text style={styles.ifText}>Card Number</Text>
@@ -98,7 +89,6 @@ const InputField = (props) =>  {
                 defaultValue={props.cardText.number}
                 onChangeText={() => setText(props.cardText.number, 1)}
                 onFocus={() => setActiveField(1)}
-                onBlur={() => setActiveField(0)}
             />
             <Text style={styles.ifText}>Card Name</Text>
             <TextInput
@@ -142,7 +132,6 @@ const InputField = (props) =>  {
                         defaultValue={props.cardText.cvv}
                         onChangeText={() => setText(props.cardText.cvv, 5)}
                         onFocus={() => setActiveField(5)}
-                        onBlur={() => setActiveField(0)}
                     />
                 </View>
             </View>

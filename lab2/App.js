@@ -19,7 +19,7 @@ const App = () => {
     <TouchableWithoutFeedback onPress={deactivateFocus} accessible={false}>
       <View style={styles.container}>
         <Creditcard />
-        <InputField activeField={activeField} setActiveField={setActiveField} cardText={cardText} setCardText={setCardText}/>
+        <InputField activeField={activeField} setActiveField={setActiveField} cardText={cardText} setCardText={setCardText} />
       
         <StatusBar style="auto" />
       </View>
