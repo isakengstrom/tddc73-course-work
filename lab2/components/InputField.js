@@ -67,19 +67,44 @@ const InputField = (props) =>  {
         setActiveField(0);
     }
 
+  
+
+    const setText = (text, ind) => {
+        if(ind == 1){
+            props.setCardText((prevState) => {
+                return {...prevState,  number: text}
+            })
+        }
+        else if (ind == 2){
+            props.setCardText((prevState) => {
+                return {...prevState,  name: text}
+            })
+        }
+        else {
+            props.setCardText((prevState) => {
+                return {...prevState,  cvv: text}
+            })
+        }
+    }
+
+
+
+
     return (
         <View style={styles.ifContainer}>
             <Text style={styles.ifText}>Card Number</Text>
             <TextInput  
                 style={[styles.ifFields, props.activeField == 1 ? styles.fieldActive : null]}
-                value={''}
+                defaultValue={props.cardText.number}
+                onChangeText={() => setText(props.cardText.number, 1)}
                 onFocus={() => setActiveField(1)}
                 onBlur={() => setActiveField(0)}
             />
             <Text style={styles.ifText}>Card Name</Text>
             <TextInput
                 style={[styles.ifFields, props.activeField == 2 ? styles.fieldActive : null]}
-                value={''}
+                defaultValue={props.cardText.name}
+                onChangeText={() => setText(props.cardText.name, 2)}
                 onFocus={() => setActiveField(2)}
             />
             <View style={{flexDirection: "row", zIndex: 2}}>
@@ -114,7 +139,8 @@ const InputField = (props) =>  {
                     <Text style={styles.ifText}>CVV</Text>
                     <TextInput
                         style={[styles.ifFields, props.activeField == 5 ? styles.fieldActive : null]}
-                        value={''}
+                        defaultValue={props.cardText.cvv}
+                        onChangeText={() => setText(props.cardText.cvv, 5)}
                         onFocus={() => setActiveField(5)}
                         onBlur={() => setActiveField(0)}
                     />

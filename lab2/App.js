@@ -8,6 +8,7 @@ import InputField from './components/InputField';
 
 const App = () => {
   const [activeField, setActiveField] = useState(0);
+  const [cardText, setCardText] = useState({number: '', name: '', cvv: ''});
 
   const deactivateFocus = () => {
     setActiveField(0);
@@ -18,7 +19,7 @@ const App = () => {
     <TouchableWithoutFeedback onPress={deactivateFocus} accessible={false}>
       <View style={styles.container}>
         <Creditcard />
-        <InputField activeField={activeField} setActiveField={setActiveField}/>
+        <InputField activeField={activeField} setActiveField={setActiveField} cardText={cardText} setCardText={setCardText}/>
       
         <StatusBar style="auto" />
       </View>
