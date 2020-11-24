@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Text, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import React from 'react';
+import { Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
 
 
 //import {Picker} from '@react-native-picker/picker';
 
 //https://www.npmjs.com/package/react-native-dropdown-picker
 import DropDownPicker from 'react-native-dropdown-picker';
-import Icon from 'react-native-vector-icons/Feather';
+//import Icon from 'react-native-vector-icons/Feather';
 
 import styles from './Styles.js';
 
@@ -40,19 +40,23 @@ const yearArray = [
     {label: '2029', value: '2029'},
 ];
 
-const InputField = (props) =>  {
+const InputField = ({state, updateState}) =>  {
+
     const setActivePickerField = (fieldIndex) => {
         Keyboard.dismiss();
         setActiveField(fieldIndex);
     }
-
-    const setActiveField = (fieldIndex) => {
-        //console.log('Active field: ' + fieldIndex);
-        props.setActiveField(fieldIndex);
+    
+    const setActiveField = (fieldInd) => {
+        updateState('activeField', fieldInd);
     }
-
-    const isPickerOpen = (ind) => {
-        if(ind == props.activeField) return true;
+    
+    const setActiveStyle = (fieldInd) => {
+        return(state.activeField == fieldInd ? styles.fieldActive : null)
+    }
+    
+    const isPickerOpen = (fieldInd) => {
+        if(fieldInd == state.activeField) return true;
         return false;
     }
 
@@ -61,15 +65,14 @@ const InputField = (props) =>  {
         setActiveField(0);
     }
 
-    const updateCardInfo = (fieldId, text) => {
+    const updateCardInfo = (fieldInd, text) => {
         let fieldName = '';
-        let temp = '';
-        if(fieldId == 1){
+        if(fieldInd == 1){
             fieldName = 'number';
             text = filterNumbers(text);
             text = addSpaces(text);
         }
-        else if (fieldId == 2){
+        else if (fieldInd == 2){
             fieldName = 'name';
         }
         else {
@@ -77,7 +80,7 @@ const InputField = (props) =>  {
             text = filterNumbers(text);
         }
         
-        props.updateCardInfo(fieldName, text);
+        updateState(fieldName, text);
     }
 
     const filterNumbers = (text) => {
@@ -85,7 +88,6 @@ const InputField = (props) =>  {
     }
 
     const addSpaces = (text) => {
-        //if(text.length % 4 == 0) return text + " ";
         let formattedText = text.split(' ').join('');
         if (formattedText.length > 0) {
             formattedText = formattedText.match(new RegExp('.{1,4}', 'g')).join(' ');
@@ -94,12 +96,13 @@ const InputField = (props) =>  {
         return formattedText;
     }
     
+
     return (
         <View style={styles.ifContainer}>
             <Text style={styles.ifText}>Card Number</Text>
             <TextInput  
-                style={[styles.ifFields, props.activeField == 1 ? styles.fieldActive : null]}
-                value={props.cardInfo.number}
+                style={[styles.ifFields, setActiveStyle(1)]}
+                value={state.number}
                 onChangeText={(text) => updateCardInfo(1, text)}
                 onFocus={() => setActiveField(1)}
                 maxLength={19}
@@ -107,8 +110,8 @@ const InputField = (props) =>  {
             />
             <Text style={styles.ifText}>Card Name</Text>
             <TextInput
-                style={[styles.ifFields, props.activeField == 2 ? styles.fieldActive : null]}
-                value={props.cardInfo.name}
+                style={[styles.ifFields, setActiveStyle(2)]}
+                value={state.name}
                 onChangeText={(text) => updateCardInfo(2, text)}
                 onFocus={() => setActiveField(2)}
             />
@@ -118,7 +121,7 @@ const InputField = (props) =>  {
                     <View style={{flexDirection: "row"}}>
                         <DropDownPicker
                             items={monthArray}
-                            containerStyle={[styles.ifFields, styles.ifPickerContainer, props.activeField == 3 ? styles.fieldActive : null, {marginEnd: 10, }]}
+                            containerStyle={[styles.ifFields, styles.ifPickerContainer, setActiveStyle(3), {marginEnd: 10, }]}
                             style={styles.ifPicker}
                             itemStyle={{justifyContent: 'flex-start', }}
                             dropDownStyle={{backgroundColor: '#fafafa'}}
@@ -126,10 +129,11 @@ const InputField = (props) =>  {
                             isVisible={isPickerOpen(3)}
                             onOpen={() => setActivePickerField(3)}
                             onClose={() => setActivePickerField(3)}
+                            onChangeItem={(item) => updateState('month', item.value)}
                         />
                         <DropDownPicker
                             items={yearArray}
-                            containerStyle={[styles.ifFields, styles.ifPickerContainer, props.activeField == 4 ? styles.fieldActive : null]}
+                            containerStyle={[styles.ifFields, styles.ifPickerContainer, setActiveStyle(4)]}
                             style={styles.ifPicker}
                             itemStyle={{justifyContent: 'flex-start',}}
                             dropDownStyle={{backgroundColor: '#fafafa'}}
@@ -137,14 +141,15 @@ const InputField = (props) =>  {
                             isVisible={isPickerOpen(4)} 
                             onOpen={() => setActivePickerField(4)}
                             onClose={() => setActivePickerField(4)}
+                            onChangeItem={(item) => updateState('month', item.value)}
                         />
                     </View>
                 </View>
                 <View style={{flex: 1,}}>
                     <Text style={styles.ifText}>CVV</Text>
                     <TextInput
-                        style={[styles.ifFields, props.activeField == 5 ? styles.fieldActive : null]}
-                        value={props.cardInfo.cvv}
+                        style={[styles.ifFields, setActiveStyle(5)]}
+                        value={state.cvv}
                         onChangeText={(text) => updateCardInfo(5, text)}
                         onFocus={() => setActiveField(5)}
                         maxLength={4}
@@ -153,7 +158,7 @@ const InputField = (props) =>  {
                 </View>
             </View>
             <TouchableOpacity onPress={buttonPressed} style={[styles.ifButton, {zIndex: 1, }]}>
-                <Text>Submit</Text>
+                <Text style={{color: 'white', }}>Submit</Text>
             </TouchableOpacity>
         </View>
     )
