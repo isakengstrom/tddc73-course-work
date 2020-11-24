@@ -65,15 +65,12 @@ const InputField = ({state, updateState}) =>  {
         setActiveField(0);
     }
 
-    const updateCardInfo = (fieldInd, text) => {
+    const filterCardInfo = (fieldInd, text) => {
         let fieldName = '';
         if(fieldInd == 1){
             fieldName = 'number';
             text = filterNumbers(text);
             text = addSpaces(text);
-        }
-        else if (fieldInd == 2){
-            fieldName = 'name';
         }
         else {
             fieldName = 'cvv';
@@ -95,7 +92,6 @@ const InputField = ({state, updateState}) =>  {
         
         return formattedText;
     }
-    
 
     return (
         <View style={styles.ifContainer}>
@@ -103,7 +99,7 @@ const InputField = ({state, updateState}) =>  {
             <TextInput  
                 style={[styles.ifFields, setActiveStyle(1)]}
                 value={state.number}
-                onChangeText={(text) => updateCardInfo(1, text)}
+                onChangeText={(text) => filterCardInfo(1, text)}
                 onFocus={() => setActiveField(1)}
                 maxLength={19}
                 //keyboardType={'number-pad'}
@@ -112,7 +108,7 @@ const InputField = ({state, updateState}) =>  {
             <TextInput
                 style={[styles.ifFields, setActiveStyle(2)]}
                 value={state.name}
-                onChangeText={(text) => updateCardInfo(2, text)}
+                onChangeText={(text) => updateState('name', text)}
                 onFocus={() => setActiveField(2)}
             />
             <View style={{flexDirection: "row", zIndex: 2}}>
@@ -129,7 +125,7 @@ const InputField = ({state, updateState}) =>  {
                             isVisible={isPickerOpen(3)}
                             onOpen={() => setActivePickerField(3)}
                             onClose={() => setActivePickerField(3)}
-                            onChangeItem={(item) => updateState('month', item.value)}
+                            onChangeItem={(item) => updateState('month', item.value)} 
                         />
                         <DropDownPicker
                             items={yearArray}
@@ -141,7 +137,7 @@ const InputField = ({state, updateState}) =>  {
                             isVisible={isPickerOpen(4)} 
                             onOpen={() => setActivePickerField(4)}
                             onClose={() => setActivePickerField(4)}
-                            onChangeItem={(item) => updateState('month', item.value)}
+                            onChangeItem={(item) => updateState('year', item.value)}
                         />
                     </View>
                 </View>
@@ -150,7 +146,7 @@ const InputField = ({state, updateState}) =>  {
                     <TextInput
                         style={[styles.ifFields, setActiveStyle(5)]}
                         value={state.cvv}
-                        onChangeText={(text) => updateCardInfo(5, text)}
+                        onChangeText={(text) => filterCardInfo(5, text)}
                         onFocus={() => setActiveField(5)}
                         maxLength={4}
                         //keyboardType={'number-pad'}
