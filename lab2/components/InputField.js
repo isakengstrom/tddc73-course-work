@@ -1,12 +1,8 @@
 import React from 'react';
 import { Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
 
-
-//import {Picker} from '@react-native-picker/picker';
-
 //https://www.npmjs.com/package/react-native-dropdown-picker
 import DropDownPicker from 'react-native-dropdown-picker';
-//import Icon from 'react-native-vector-icons/Feather';
 
 import styles from './Styles.js';
 
@@ -54,15 +50,20 @@ const InputField = ({state, updateState}) =>  {
     const setActiveStyle = (fieldInd) => {
         return(state.activeField == fieldInd ? styles.fieldActive : null)
     }
+
+    const setActiveButtonStyle = () => {
+        return(isNotReadyToSubmit() ? { backgroundColor: 'rgba(0, 85, 212, 0.7)' } : { backgroundColor: '#0055d4' });
+    }
     
     const isPickerOpen = (fieldInd) => {
         if(fieldInd == state.activeField) return true;
         return false;
     }
 
-    const buttonPressed = () => {
+    const onSubmit = () => {
         Keyboard.dismiss();
         setActiveField(0);
+        updateState('', '');
     }
 
     const filterCardInfo = (fieldInd, text) => {
@@ -93,6 +94,18 @@ const InputField = ({state, updateState}) =>  {
         return formattedText;
     }
 
+    const isNotReadyToSubmit = () => {
+        if(    state.number.length < 19 
+            || state.name == '' 
+            || state.month == '' 
+            || state.year == '' 
+            || state.cvv.length < 3)
+            return true;
+
+        return false;
+    }
+
+    let controller;
     return (
         <View style={styles.ifContainer}>
             <Text style={styles.ifText}>Card Number</Text>
@@ -102,7 +115,7 @@ const InputField = ({state, updateState}) =>  {
                 onChangeText={(text) => filterCardInfo(1, text)}
                 onFocus={() => setActiveField(1)}
                 maxLength={19}
-                //keyboardType={'number-pad'}
+                keyboardType={'number-pad'}
             />
             <Text style={styles.ifText}>Card Name</Text>
             <TextInput
@@ -117,14 +130,14 @@ const InputField = ({state, updateState}) =>  {
                     <View style={{flexDirection: "row"}}>
                         <DropDownPicker
                             items={monthArray}
-                            containerStyle={[styles.ifFields, styles.ifPickerContainer, setActiveStyle(3), {marginEnd: 10, }]}
+                            controller={instance => controller = instance}
+                            containerStyle={[styles.ifFields, styles.ifPickerContainer, setActiveStyle(3), {marginEnd: 10}]}
                             style={styles.ifPicker}
                             itemStyle={{justifyContent: 'flex-start', }}
-                            dropDownStyle={{backgroundColor: '#fafafa'}}
+                            dropDownStyle={{backgroundColor: '#fafafa', borderColor: '#0055d4'}}
                             placeholder='Month'
                             isVisible={isPickerOpen(3)}
                             onOpen={() => setActivePickerField(3)}
-                            onClose={() => setActivePickerField(3)}
                             onChangeItem={(item) => updateState('month', item.value)} 
                         />
                         <DropDownPicker
@@ -132,11 +145,10 @@ const InputField = ({state, updateState}) =>  {
                             containerStyle={[styles.ifFields, styles.ifPickerContainer, setActiveStyle(4)]}
                             style={styles.ifPicker}
                             itemStyle={{justifyContent: 'flex-start',}}
-                            dropDownStyle={{backgroundColor: '#fafafa'}}
-                            placeholder='Year'
+                            dropDownStyle={{backgroundColor: '#fafafa', borderColor: '#0055d4'}}
+                            placeholder={'Year'}
                             isVisible={isPickerOpen(4)} 
                             onOpen={() => setActivePickerField(4)}
-                            onClose={() => setActivePickerField(4)}
                             onChangeItem={(item) => updateState('year', item.value)}
                         />
                     </View>
@@ -149,11 +161,11 @@ const InputField = ({state, updateState}) =>  {
                         onChangeText={(text) => filterCardInfo(5, text)}
                         onFocus={() => setActiveField(5)}
                         maxLength={4}
-                        //keyboardType={'number-pad'}
+                        keyboardType={'number-pad'}
                     />
                 </View>
             </View>
-            <TouchableOpacity onPress={buttonPressed} style={[styles.ifButton, {zIndex: 1, }]}>
+            <TouchableOpacity onPress={onSubmit} disabled={isNotReadyToSubmit()} style={[styles.ifButton, {zIndex: 1, }, setActiveButtonStyle()]}>
                 <Text style={{color: 'white', }}>Submit</Text>
             </TouchableOpacity>
         </View>

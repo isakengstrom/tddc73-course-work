@@ -10,6 +10,7 @@ export default StyleSheet.create({
     alignItems: "center",
   },
 
+  // CREDIT CARD STYLING
   ccContainer: {
     height: '20%',
     aspectRatio: 1.586/1,
@@ -28,8 +29,42 @@ export default StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 10,
+    zIndex: 0
+  },
+  // Credit Card Front
+  ccFrontContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
+  ccFrontImagesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  ccFrontTextContainer: {
+    color: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  ccMainText: {
+    //alignSelf: 'stretch',
+    color: 'white',
+    padding: 5,
+    fontWeight: '500',
+    fontSize: 17,
+    //borderWidth: 1,
+    borderRadius: 5,
+    borderColor: 'white',
+    overflow: 'hidden',
+  },
+  ccOtherText: {
+    color: 'gray',
+    fontSize: 12,
   },
 
+  // INPUT FIELD STYLING
   ifContainer: {
     height: '45%',
     marginTop: '35%',
@@ -78,7 +113,7 @@ export default StyleSheet.create({
   ifButton: {
     width: '100%',  
     height: 40,
-    backgroundColor: '#0055d4',
+    //backgroundColor: '#0055d4',
     borderRadius: 5,
     marginTop: 15,
     justifyContent: 'center',
