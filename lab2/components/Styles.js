@@ -4,7 +4,6 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ddeefc',
-    alignItems: 'center',
     justifyContent: 'flex-start',
     flexDirection: "column",
     alignItems: "center",
@@ -30,6 +29,16 @@ export default StyleSheet.create({
     height: '100%',
     borderRadius: 10,
     zIndex: 0
+  },
+  ccChip: {
+    width: 40, 
+    height: 30, 
+    resizeMode: 'contain',
+  },
+  ccCardType: {
+    width: 60, 
+    height: 30,
+    resizeMode: 'contain',
   },
   // Credit Card Front
   ccFrontContainer: {

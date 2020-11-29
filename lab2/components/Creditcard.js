@@ -56,10 +56,10 @@ const Creditcard = ({state}) => {
         return(
             <View style={styles.ccFrontContainer}>
                 <View style={styles.ccFrontImagesContainer}>
-                    <Image style={{width: 30, height: 30}} source={ccChip} />
-                    <Image style={{width: 30, height: 30}} source={ccTypeImage} />
+                    <Image style={styles.ccChip} source={ccChip} />
+                    <Image style={styles.ccCardType} source={ccTypeImage} />
                 </View>
-                <View>
+                <View style={{alignItems: "center",}}>
                     <Text style={styles.ccMainText}>
                         {state.number}
                         {('XXXX XXXX XXXX XXXX').slice(state.number.length, 19)}
