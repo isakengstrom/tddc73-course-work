@@ -39,7 +39,7 @@ const App = () => {
   return (
     <TouchableWithoutFeedback onPress={deactivateFocus} accessible={false}>
       <View style={styles.container}>
-        <Creditcard state={state} />
+        <Creditcard state={state} updateState={updateState} />
         <InputField state={state} updateState={updateState} />
         <StatusBar style="auto" />        
       </View>

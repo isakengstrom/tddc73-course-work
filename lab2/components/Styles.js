@@ -72,6 +72,12 @@ export default StyleSheet.create({
     color: 'gray',
     fontSize: 12,
   },
+  correspFieldActive: {
+    backgroundColor: 'rgba(50, 50, 50, 0.5)',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 5,
+  },
 
   // INPUT FIELD STYLING
   ifContainer: {
