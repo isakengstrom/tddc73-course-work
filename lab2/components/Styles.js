@@ -55,12 +55,12 @@ export default StyleSheet.create({
   ccFrontTextContainer: {
     color: 'white',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    height: 50,
   },
   ccMainText: {
     //alignSelf: 'stretch',
     color: 'white',
-    padding: 5,
+    padding: 0,
     fontWeight: '500',
     fontSize: 17,
     //borderWidth: 1,

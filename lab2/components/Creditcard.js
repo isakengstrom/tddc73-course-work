@@ -65,27 +65,40 @@ const Creditcard = ({state, updateState}) => {
                 </View>
                 <TouchableWithoutFeedback onPress={()=>updateState('activeField', 1)}>
                     <View style={[{alignItems: "center",}, setActiveStyle(1)]}>
-                        <Text style={styles.ccMainText}>
+                        <Text style={[styles.ccMainText, {padding: 5}]}>
                             {state.number}
                             {('XXXX XXXX XXXX XXXX').slice(state.number.length, 19)}
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <View style={styles.ccFrontTextContainer}>
-                    <Text style={[{maxWidth: '70%'}, styles.ccOtherText, setActiveStyle(2)]}>
-                        {'Card Holder\n'}
-                        <Text style={styles.ccMainText}>
-                            {state.name ? state.name.toUpperCase() : 'FULL NAME'}
-                        </Text>
-                    </Text>
-                    <Text style={[{maxWidth: '30%'}, styles.ccOtherText, setActiveStyle(3), setActiveStyle(4) ]}>
-                        {'Expires\n'}
-                        <Text style={styles.ccMainText}>
-                            {(state.month.length > 0 && state.month.length < 2) ? '0' : ''}
-                            {(state.month ? state.month : 'MM') + '/'}
-                            {state.year ? state.year.slice(2,4) : 'YY'}
-                        </Text>
-                    </Text>
+                    <TouchableWithoutFeedback  onPress={()=>updateState('activeField', 2)}>
+                        <View  style={[{justifyContent: 'center', flex: 3, paddingLeft: 5, height: '100%', marginEnd: 5}, setActiveStyle(2) ]}>
+                            <Text style={[styles.ccOtherText,]} >
+                                {'Card Holder\n'}
+                                <Text style={styles.ccMainText}>
+                                    {state.name ? state.name.toUpperCase() : 'FULL NAME'}
+                                </Text>
+                            </Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <View style={[{flex: 2, height: '100%', justifyContent: 'center', paddingLeft: 5,}, setActiveStyle(3), setActiveStyle(4)]}>
+                        <Text style={styles.ccOtherText}>Expires</Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <TouchableWithoutFeedback onPress={()=>updateState('activeField', 3)}>
+                                <Text style={styles.ccMainText}>
+                                    {(state.month.length > 0 && state.month.length < 2) ? '0' : ''}
+                                    {(state.month ? state.month : 'MM')}
+                                </Text>
+                            </TouchableWithoutFeedback>
+                            <Text style={styles.ccMainText}>/</Text>
+                            <TouchableWithoutFeedback onPress={()=>updateState('activeField', 4)}>
+                                <Text style={styles.ccMainText}>
+                                    {state.year ? state.year.slice(2,4) : 'YY'}
+                                </Text>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </View>                     
                 </View>
             </View>
         );
