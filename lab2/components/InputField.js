@@ -4,7 +4,7 @@ import { Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
 //https://www.npmjs.com/package/react-native-dropdown-picker
 import DropDownPicker from 'react-native-dropdown-picker';
 
-import styles from './Styles.js';
+import styles from './InputFieldStyles.js';
 
 const monthArray = [
     {label: 'Month', value: 'month', disabled: true},
@@ -42,11 +42,11 @@ const InputField = ({state, updateState}) =>  {
         Keyboard.dismiss();
         setActiveField(fieldIndex);
     }
-    
+
     const setActiveField = (fieldInd) => {
         updateState('activeField', fieldInd);
     }
-    
+
     const setActiveStyle = (fieldInd) => {
         return(state.activeField == fieldInd ? styles.fieldActive : null)
     }
@@ -54,7 +54,7 @@ const InputField = ({state, updateState}) =>  {
     const setActiveButtonStyle = () => {
         return(isNotReadyToSubmit() ? { backgroundColor: 'rgba(0, 85, 212, 0.7)' } : { backgroundColor: '#0055d4' });
     }
-    
+
     const isPickerOpen = (fieldInd) => {
         if(fieldInd == state.activeField) return true;
         return false;
@@ -77,7 +77,7 @@ const InputField = ({state, updateState}) =>  {
             fieldName = 'cvv';
             text = filterNumbers(text);
         }
-        
+
         updateState(fieldName, text);
     }
 
@@ -90,15 +90,15 @@ const InputField = ({state, updateState}) =>  {
         if (formattedText.length > 0) {
             formattedText = formattedText.match(new RegExp('.{1,4}', 'g')).join(' ');
         }
-        
+
         return formattedText;
     }
 
     const isNotReadyToSubmit = () => {
-        if(    state.number.length < 19 
-            || state.name == '' 
-            || state.month == '' 
-            || state.year == '' 
+        if(    state.number.length < 19
+            || state.name == ''
+            || state.month == ''
+            || state.year == ''
             || state.cvv.length < 3)
             return true;
 
@@ -109,7 +109,7 @@ const InputField = ({state, updateState}) =>  {
     return (
         <View style={styles.ifContainer}>
             <Text style={styles.ifText}>Card Number</Text>
-            <TextInput  
+            <TextInput
                 style={[styles.ifFields, setActiveStyle(1)]}
                 value={state.number}
                 onChangeText={(text) => filterCardInfo(1, text)}
@@ -138,7 +138,7 @@ const InputField = ({state, updateState}) =>  {
                             placeholder='Month'
                             isVisible={isPickerOpen(3)}
                             onOpen={() => setActivePickerField(3)}
-                            onChangeItem={(item) => updateState('month', item.value)} 
+                            onChangeItem={(item) => updateState('month', item.value)}
                         />
                         <DropDownPicker
                             items={yearArray}
@@ -147,7 +147,7 @@ const InputField = ({state, updateState}) =>  {
                             itemStyle={{justifyContent: 'flex-start',}}
                             dropDownStyle={{backgroundColor: '#fafafa', borderColor: '#0055d4'}}
                             placeholder={'Year'}
-                            isVisible={isPickerOpen(4)} 
+                            isVisible={isPickerOpen(4)}
                             onOpen={() => setActivePickerField(4)}
                             onChangeItem={(item) => updateState('year', item.value)}
                         />
@@ -173,4 +173,3 @@ const InputField = ({state, updateState}) =>  {
 }
 
 export default InputField;
-  

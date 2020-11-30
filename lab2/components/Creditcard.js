@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Image, TouchableWithoutFeedback } from 'react-native';
 
-import styles from './Styles.js';
+import styles from './CreditcardStyles.js';
 
 // uri to the location of the github repo where the images are stored
 const imageURI = "https://raw.githubusercontent.com/bioengstrom/tddc73-course-work/master/lab2/assets/images";
@@ -68,7 +68,7 @@ const Creditcard = ({state, updateState}) => {
                 </View>
                 <TouchableWithoutFeedback onPress={()=>updateState('activeField', 1)}>
                     <View style={[{alignSelf: "stretch",}, setActiveStyle(1)]}>
-                        <Text style={[styles.ccMainText, {padding: 5}]}>
+                        <Text style={[styles.ccMainText, {padding: 5, fontSize: 19}]}>
                             {state.number}
                             {('XXXX XXXX XXXX XXXX').slice(state.number.length, 19)}
                         </Text>
@@ -76,8 +76,8 @@ const Creditcard = ({state, updateState}) => {
                 </TouchableWithoutFeedback>
                 <View style={styles.ccFrontTextContainer}>
                     <TouchableWithoutFeedback onPress={()=>updateState('activeField', 2)}>
-                        <View  style={[{justifyContent: 'center', flex: 3, paddingLeft: 5, height: '100%', marginEnd: 5}, setActiveStyle(2) ]}>
-                            <Text style={[styles.ccOtherText,]} >
+                        <View style={[{justifyContent: 'center', flex: 3, padding: 5, marginEnd: 5}, setActiveStyle(2) ]}>
+                            <Text style={[styles.ccOtherText]} >
                                 {'Card Holder\n'}
                                 <Text style={styles.ccMainText}>
                                     {state.name ? state.name.toUpperCase() : 'FULL NAME'}
@@ -85,7 +85,7 @@ const Creditcard = ({state, updateState}) => {
                             </Text>
                         </View>
                     </TouchableWithoutFeedback>
-                    <View style={[{flex: 2, height: '100%', justifyContent: 'center', paddingLeft: 5,}, setActiveStyle(3), setActiveStyle(4)]}>
+                    <View style={[{justifyContent: 'center', padding: 5,}, setActiveStyle(3), setActiveStyle(4)]}>
                         <Text style={styles.ccOtherText}>Expires</Text>
                         <View style={{flexDirection: 'row'}}>
                             <TouchableWithoutFeedback onPress={()=>updateState('activeField', 3)}>
@@ -112,12 +112,12 @@ const Creditcard = ({state, updateState}) => {
             <View style={styles.ccBackContainer}>
                 <View style={styles.ccMagneticStrip}></View>
                 <View style={styles.ccCVVContainer}>
-                  <Text style={styles.ccOtherText}>CVV</Text>
+                  <Text style={[styles.ccOtherText, {marginEnd: 10}]}>CVV</Text>
                   <View style={styles.ccCVVField}>
                     <Text>{('*').repeat(state.cvv.length)}</Text>
                   </View>
                 </View>
-                <Image style={[styles.ccCardType, {alignSelf: 'flex-end', opacity: 0.5}]} source={ccTypeImage} />
+                <Image style={[styles.ccCardType, {alignSelf: 'flex-end', opacity: 0.7, marginEnd: 10}]} source={ccTypeImage} />
             </View>
         );
     }
