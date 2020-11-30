@@ -21,7 +21,7 @@ export default StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.8,
-    shadowRadius: 10, 
+    shadowRadius: 10,
   },
   ccImage: {
     position: "absolute",
@@ -31,12 +31,12 @@ export default StyleSheet.create({
     zIndex: 0
   },
   ccChip: {
-    width: 40, 
-    height: 30, 
+    width: 40,
+    height: 30,
     resizeMode: 'contain',
   },
   ccCardType: {
-    width: 60, 
+    width: 60,
     height: 30,
     resizeMode: 'contain',
   },
@@ -58,12 +58,10 @@ export default StyleSheet.create({
     height: 50,
   },
   ccMainText: {
-    //alignSelf: 'stretch',
     color: 'white',
     padding: 0,
     fontWeight: '500',
     fontSize: 17,
-    //borderWidth: 1,
     borderRadius: 5,
     borderColor: 'white',
     overflow: 'hidden',
@@ -78,6 +76,33 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
   },
+  // Credit Card Back
+  ccBackContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
+  ccMagneticStrip: {
+    height: 35,
+    backgroundColor:'black'
+  },
+  ccCVVContainer: {
+    alignItems: 'flex-end',
+    margin: 10,
+  },
+  ccCVVField: {
+    backgroundColor: 'white',
+    height: 35,
+    alignSelf: 'stretch',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 5,
+    borderRadius: 5,
+    marginTop: 5,
+  },
 
   // INPUT FIELD STYLING
   ifContainer: {
@@ -85,7 +110,7 @@ export default StyleSheet.create({
     marginTop: '35%',
     margin: 20,
     padding: 20,
-    alignSelf: "stretch", 
+    alignSelf: "stretch",
     alignContent: 'stretch',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -95,7 +120,7 @@ export default StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.4,
-    shadowRadius: 5, 
+    shadowRadius: 5,
   },
   ifText: {
     alignSelf: 'flex-start',
@@ -116,17 +141,17 @@ export default StyleSheet.create({
   },
   //Additional styling for the picker inputfield containers
   ifPickerContainer: {
-    flex: 1, 
+    flex: 1,
     padding: 0,
   },
   ifPicker: {
-    borderWidth: 0, 
-    padding: 0, 
+    borderWidth: 0,
+    padding: 0,
     margin: 0,
   },
 
   ifButton: {
-    width: '100%',  
+    width: '100%',
     height: 40,
     //backgroundColor: '#0055d4',
     borderRadius: 5,
@@ -140,7 +165,7 @@ export default StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0.5, height: 3 },
     shadowOpacity: 0.3,
-    shadowRadius: 2, 
+    shadowRadius: 2,
     elevation: 5,
   },
 });

@@ -27,12 +27,12 @@ const ccTypes = [
 ];
 
 const Creditcard = ({state, updateState}) => {
-    
+
     const getCardType = () => {
         let number = state.number;
         let ccType = 'visa'; // default type
 
-        // Map over the card type specifics and match it to the input to decide which card type it is. 
+        // Map over the card type specifics and match it to the input to decide which card type it is.
         ccTypes.map((cc) => {
             if(number.match(new RegExp(cc.re)) != null) {
                 ccType = cc.type;
@@ -40,7 +40,7 @@ const Creditcard = ({state, updateState}) => {
             }
         });
 
-        return ccType; 
+        return ccType;
     }
 
     //uri for the card types
@@ -51,7 +51,7 @@ const Creditcard = ({state, updateState}) => {
     const showFront = () => {
         if(state.activeField != 5)
             return true;
-        
+
         return false;
     }
 
@@ -67,7 +67,7 @@ const Creditcard = ({state, updateState}) => {
                     <Image style={styles.ccCardType} source={ccTypeImage} />
                 </View>
                 <TouchableWithoutFeedback onPress={()=>updateState('activeField', 1)}>
-                    <View style={[{alignItems: "center",}, setActiveStyle(1)]}>
+                    <View style={[{alignSelf: "stretch",}, setActiveStyle(1)]}>
                         <Text style={[styles.ccMainText, {padding: 5}]}>
                             {state.number}
                             {('XXXX XXXX XXXX XXXX').slice(state.number.length, 19)}
@@ -101,7 +101,7 @@ const Creditcard = ({state, updateState}) => {
                                 </Text>
                             </TouchableWithoutFeedback>
                         </View>
-                    </View>                     
+                    </View>
                 </View>
             </View>
         );
@@ -109,11 +109,15 @@ const Creditcard = ({state, updateState}) => {
 
     const cardBack = () => {
         return(
-            <View>
-                <View>
-                
+            <View style={styles.ccBackContainer}>
+                <View style={styles.ccMagneticStrip}></View>
+                <View style={styles.ccCVVContainer}>
+                  <Text style={styles.ccOtherText}>CVV</Text>
+                  <View style={styles.ccCVVField}>
+                    <Text>{('*').repeat(state.cvv.length)}</Text>
+                  </View>
                 </View>
-                <Text style={{color: 'white'}}>BACK</Text>
+                <Image style={[styles.ccCardType, {alignSelf: 'flex-end', opacity: 0.5}]} source={ccTypeImage} />
             </View>
         );
     }
@@ -127,4 +131,3 @@ const Creditcard = ({state, updateState}) => {
 }
 
 export default Creditcard;
-  
