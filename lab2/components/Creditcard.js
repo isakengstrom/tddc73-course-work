@@ -3,16 +3,21 @@ import { Text, View, Image, TouchableWithoutFeedback } from 'react-native';
 
 import styles from './Styles.js';
 
-const randNumb = Math.floor(Math.random() * 25 + 1);
+// uri to the location of the github repo where the images are stored
 const imageURI = "https://raw.githubusercontent.com/bioengstrom/tddc73-course-work/master/lab2/assets/images";
+
+// Choose one of the credit card backgrounds at random
+const randNumb = Math.floor(Math.random() * 25 + 1);
 const ccBackground = {
     uri: `${imageURI}/${randNumb}.jpeg`,
 };
 
+// uri for the chip displayed at the front of the card
 const ccChip = {
     uri: `${imageURI}/chip.png`,
 };
 
+// Card type specifics
 const ccTypes = [
     {type: 'visa', re: '^4'},
     {type: 'amex', re: '^(34|37)'},
@@ -23,14 +28,11 @@ const ccTypes = [
 
 const Creditcard = ({state, updateState}) => {
     
-    const getCardImage = () => {
-        return(ccBackground);
-    }
-
     const getCardType = () => {
         let number = state.number;
         let ccType = 'visa'; // default type
 
+        // Map over the card type specifics and match it to the input to decide which card type it is. 
         ccTypes.map((cc) => {
             if(number.match(new RegExp(cc.re)) != null) {
                 ccType = cc.type;
@@ -41,6 +43,7 @@ const Creditcard = ({state, updateState}) => {
         return ccType; 
     }
 
+    //uri for the card types
     const ccTypeImage = {
         uri: `${imageURI}/${getCardType()}.png`,
     };
@@ -72,7 +75,7 @@ const Creditcard = ({state, updateState}) => {
                     </View>
                 </TouchableWithoutFeedback>
                 <View style={styles.ccFrontTextContainer}>
-                    <TouchableWithoutFeedback  onPress={()=>updateState('activeField', 2)}>
+                    <TouchableWithoutFeedback onPress={()=>updateState('activeField', 2)}>
                         <View  style={[{justifyContent: 'center', flex: 3, paddingLeft: 5, height: '100%', marginEnd: 5}, setActiveStyle(2) ]}>
                             <Text style={[styles.ccOtherText,]} >
                                 {'Card Holder\n'}
@@ -117,7 +120,7 @@ const Creditcard = ({state, updateState}) => {
 
     return (
         <View style={styles.ccContainer}>
-            <Image source={getCardImage()} style={[styles.ccImage, showFront() ? null : {transform: [{rotateY: '180deg'}]} ]} />
+            <Image source={ccBackground} style={[styles.ccImage, showFront() ? null : {transform: [{rotateY: '180deg'}]} ]} />
             {showFront() ? cardFront() : cardBack()}
         </View>
     )
