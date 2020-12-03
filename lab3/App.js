@@ -1,21 +1,36 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-//import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 
-//https://www.npmjs.com/package/react-native-dropdown-picker
-import DropDownPicker from 'react-native-dropdown-picker';
+import HomeScreen from './src/screens/HomeScreen';
+import { screenOptions } from './src/components/Styles';
 
-import styles from './components/Styles';
+const Stack = createStackNavigator();
+
+const httpLink = new HttpLink({ uri: 'https://api.github.com/graphql' })
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache()
+})
 
 const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
+          <Stack.Screen 
+            name="Home"
+            component={HomeScreen}
+            options={{ title: 'The HomeScreen' }}
+          />
+        </Stack.Navigator>
+        <StatusBar style="light" />
+      </NavigationContainer>     
+    </ApolloProvider>
   );
 }
-
 
 export default App;
