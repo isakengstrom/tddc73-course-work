@@ -101,7 +101,6 @@ const InputField = ({state, updateState}) =>  {
         return false;
     }
 
-    let controller;
     return (
         <View style={styles.ifContainer}>
             <Text style={styles.ifText}>Card Number</Text>
@@ -126,7 +125,6 @@ const InputField = ({state, updateState}) =>  {
                     <View style={styles.row}>
                         <DropDownPicker
                             items={monthArray}
-                            controller={instance => controller = instance}
                             containerStyle={[styles.ifFields, styles.ifPickerContainer, setActiveStyle(3), {marginEnd: 10}]}
                             style={styles.ifPicker}
                             itemStyle={styles.flexStart}
