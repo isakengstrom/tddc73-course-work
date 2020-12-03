@@ -28,7 +28,6 @@ const App = () => {
       ...state,
       [stateName]: value
     });
-    //console.log("State: " + stateName + " - value: " + value);
   
     if(stateName == '') {
       setState(initStates);

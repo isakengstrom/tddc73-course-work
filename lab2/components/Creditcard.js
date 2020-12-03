@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, View, Image, TouchableWithoutFeedback } from 'react-native';
-
 import styles from './CreditcardStyles.js';
 
 // uri to the location of the github repo where the images are stored
@@ -39,7 +38,6 @@ const Creditcard = ({state, updateState}) => {
                 return;
             }
         });
-
         return ccType;
     }
 
@@ -51,7 +49,6 @@ const Creditcard = ({state, updateState}) => {
     const showFront = () => {
         if(state.activeField != 5)
             return true;
-
         return false;
     }
 
@@ -68,7 +65,7 @@ const Creditcard = ({state, updateState}) => {
                 </View>
                 <TouchableWithoutFeedback onPress={()=>updateState('activeField', 1)}>
                     <View style={[{alignSelf: "stretch",}, setActiveStyle(1)]}>
-                        <Text style={[styles.ccMainText, {padding: 5, fontSize: 19}]}>
+                        <Text style={[styles.ccMainText, styles.ccCardNumberText]}>
                             {state.number}
                             {('XXXX XXXX XXXX XXXX').slice(state.number.length, 19)}
                         </Text>
@@ -76,7 +73,7 @@ const Creditcard = ({state, updateState}) => {
                 </TouchableWithoutFeedback>
                 <View style={styles.ccFrontTextContainer}>
                     <TouchableWithoutFeedback onPress={()=>updateState('activeField', 2)}>
-                        <View style={[{justifyContent: 'center', flex: 3, padding: 5, marginEnd: 5}, setActiveStyle(2) ]}>
+                        <View style={[styles.ccCardHolderContainer, setActiveStyle(2)]}>
                             <Text style={[styles.ccOtherText]} >
                                 {'Card Holder\n'}
                                 <Text style={styles.ccMainText}>
@@ -85,7 +82,7 @@ const Creditcard = ({state, updateState}) => {
                             </Text>
                         </View>
                     </TouchableWithoutFeedback>
-                    <View style={[{justifyContent: 'center', padding: 5,}, setActiveStyle(3), setActiveStyle(4)]}>
+                    <View style={[styles.ccExpirationContainer, setActiveStyle(3), setActiveStyle(4)]}>
                         <Text style={styles.ccOtherText}>Expires</Text>
                         <View style={{flexDirection: 'row'}}>
                             <TouchableWithoutFeedback onPress={()=>updateState('activeField', 3)}>
@@ -117,14 +114,14 @@ const Creditcard = ({state, updateState}) => {
                     <Text>{('*').repeat(state.cvv.length)}</Text>
                   </View>
                 </View>
-                <Image style={[styles.ccCardType, {alignSelf: 'flex-end', opacity: 0.7, marginEnd: 10}]} source={ccTypeImage} />
+                <Image style={[styles.ccCardType, styles.ccCardTypeBack]} source={ccTypeImage}/>
             </View>
         );
     }
 
     return (
         <View style={styles.ccContainer}>
-            <Image source={ccBackground} style={[styles.ccImage, showFront() ? null : {transform: [{rotateY: '180deg'}]} ]} />
+            <Image source={ccBackground} style={[styles.ccImage, showFront() ? null : styles.ccFlipped ]} />
             {showFront() ? cardFront() : cardBack()}
         </View>
     )

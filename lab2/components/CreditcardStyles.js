@@ -41,7 +41,7 @@ export default StyleSheet.create({
     borderRadius: 5,
     borderColor: 'white',
     overflow: 'hidden',
-    fontFamily: 'Roboto'
+    fontFamily: 'Courier'
   },
   ccOtherText: {
     color: 'rgb(211, 211, 211)',
@@ -71,6 +71,20 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
   },
+  ccCardHolderContainer: {
+    justifyContent: 'center', 
+    flex: 3, 
+    padding: 5, 
+    marginEnd: 5,
+  },
+  ccExpirationContainer: {
+    justifyContent: 'center', 
+    padding: 5,
+  },
+  ccCardNumberText: {
+    padding: 5, 
+    fontSize: 20,
+  },
 
   // Styling of back side
   ccBackContainer: {
@@ -99,4 +113,12 @@ export default StyleSheet.create({
     borderRadius: 5,
     marginTop: 5,
   },
+  ccCardTypeBack: {
+    alignSelf: 'flex-end', 
+    opacity: 0.7, 
+    marginEnd: 10,
+  },
+  ccFlipped: {
+    transform: [{rotateY: '180deg'}]
+  }
 });

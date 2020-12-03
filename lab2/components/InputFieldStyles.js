@@ -1,6 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  row: {
+    flexDirection: "row", 
+  },
+  flexStart: {
+    justifyContent: 'flex-start',
+  },
 
   // General Styling
   ifContainer: {
@@ -16,13 +22,28 @@ export default StyleSheet.create({
     backgroundColor: 'white',
 
     shadowColor: '#000',
-    shadowOffset: { width: 1, height: 1 },
+    shadowOffset: {width: 1, height: 1},
     shadowOpacity: 0.4,
     shadowRadius: 5,
   },
   ifText: {
     alignSelf: 'flex-start',
     fontSize: 10,
+  },
+  ifButton: {
+    width: '100%',
+    height: 40,
+    borderRadius: 5,
+    marginTop: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fieldActive: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0.5, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 5,
   },
   //Base styling for the inputfields containers
   ifFields: {
@@ -37,6 +58,10 @@ export default StyleSheet.create({
     padding: 5,
   },
   //Additional styling for the picker inputfield containers
+  ifPickersContainer: {
+    flex: 2, 
+    marginEnd: 20,
+  },
   ifPickerContainer: {
     flex: 1,
     padding: 0,
@@ -46,20 +71,8 @@ export default StyleSheet.create({
     padding: 0,
     margin: 0,
   },
-  ifButton: {
-    width: '100%',
-    height: 40,
-    borderRadius: 5,
-    marginTop: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2,
-  },
-  fieldActive: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0.5, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 5,
-  },
+  ifPickerDropdown: {
+    backgroundColor: '#fafafa', 
+    borderColor: '#0055d4'
+  }
 });
