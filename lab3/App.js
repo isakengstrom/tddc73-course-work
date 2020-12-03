@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 //import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
+//https://www.npmjs.com/package/react-native-dropdown-picker
+import DropDownPicker from 'react-native-dropdown-picker';
+
 import styles from './components/Styles';
 
 const App = () => {
