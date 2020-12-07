@@ -20,26 +20,25 @@ query fetchRepos($query: String!) {
 `;
 
 export default () => {
-  const { data, loading } = useQuery(MY_QUERY, {
+  const { data, loading, error } = useQuery(MY_QUERY, {
     variables: {
       query: 'stars:>1000 language:python'
     }
   }
   );
-  console.log(useQuery(MY_QUERY, {
+  /*console.log(useQuery(MY_QUERY, {
     variables: {
       query: 'stars:>1000 language:python'
     }
   }
-  ));
-
+  ));*/
 
   //console.log(data.search.edges.node.id.toString())
 
   if(loading) {
     return <Loading />
   }
-  else console.log(data);
+  console.log(data);
 
 
   return (
