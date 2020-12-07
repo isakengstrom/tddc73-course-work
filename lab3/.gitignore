@@ -9,8 +9,12 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# Environment variables
+*.env
+.env
+
 # macOS
 .DS_Store
 
-# Yarn error
+# Yarn errors
 yarn-error.log

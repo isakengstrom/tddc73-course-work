@@ -1,3 +1,5 @@
 # SDK cache
 .vscode
 .idea
+
+*.env
