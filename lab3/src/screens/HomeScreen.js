@@ -2,9 +2,9 @@ import React from 'react'
 import { View, Text, FlatList, Pressable} from 'react-native'
 import { gql, useQuery } from '@apollo/client';
 import DropDownPicker from 'react-native-dropdown-picker';
-//import {Query} from 'react-apollo'
 
 import Loading from '../components/Loading';
+import styles, { mainGrey } from '../components/Styles';
 
 const MY_QUERY = gql`
   query {
@@ -33,16 +33,16 @@ export default () => {
   if(error) { 
     console.log(error.graphQLErrors + '\n\n'+ error.networkError);
     //console.log(error.networkError.result.error);
-    return (
-        <Text>Error loading data..</Text>
-  )}
+    return <Text>Error loading data..</Text>
+    
+  }
 
   return (
     <View>
+      <Text style={{color: mainGrey, fontWeight: '800' }}>Fetched data:</Text>
       {data.search.nodes.map(node => (
         <Text>{node.name}</Text>
       ))}
-      <Text>TJOOO BREEE</Text>
     </View>
   )
 }

@@ -30,30 +30,7 @@ const client = new ApolloClient({
 });
 
 
-/*
-const httpLink = new HttpLink({ uri: 'https://api.github.com/graphql' });
-
-const client = new ApolloClient({
-  link: httpLink,
-  request: operation => {
-    operation.setContext({
-      headers: {
-        ...headers,
-        authorization: `Bearer ${GITHUB_ACCESS_TOKEN_NR2}`,
-      },
-    });
-  },
-  cache: new InMemoryCache(),
-  
-  onError: ({ networkError, graphQLErrors }) => {
-    console.log('graphQLErrors', graphQLErrors)
-    console.log('networkError', networkError)
-  }
-});
-*/
-
 const App = () => {
-
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
