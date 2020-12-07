@@ -2,40 +2,58 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
+import { onError } from "apollo-link-error";
+import { setContext } from '@apollo/client/link/context';
 
 import HomeScreen from './src/screens/HomeScreen';
 import { screenOptions } from './src/components/Styles';
-import {setContext} from '@apollo/client/link/context';
-import { GITHUB_PERSONAL_ACCESS_TOKEN } from '@env';
+import { GITHUB_ACCESS_TOKEN, GITHUB_ACCESS_TOKEN_NR2 } from '@env';
 
 const Stack = createStackNavigator();
 
-const httpLink = new HttpLink({ uri: 'https://api.github.com/graphql' })
+const httpLink = createHttpLink({ uri: 'https://api.github.com/graphql' });
 
-/*const authLink = setContext((_, {headers}) => {
-  console.log('setContext ' + 'c7e9f17f5b24a3c0acc5e900fe5bb5d312b19e3a');
+const authLink = setContext((_, { headers }) => {
+  // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
-      authorization: `Bearer c7e9f17f5b24a3c0acc5e900fe5bb5d312b19e3a`,
-    },
-  };
-});*/
+      authorization: GITHUB_ACCESS_TOKEN_NR2 ? `Bearer ${GITHUB_ACCESS_TOKEN_NR2}` : "",
+    }
+  }
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
+
+
+/*
+const httpLink = new HttpLink({ uri: 'https://api.github.com/graphql' });
 
 const client = new ApolloClient({
   link: httpLink,
   request: operation => {
     operation.setContext({
       headers: {
-        authorization: `Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}`,
+        ...headers,
+        authorization: `Bearer ${GITHUB_ACCESS_TOKEN_NR2}`,
       },
     });
   },
-  cache: new InMemoryCache()
-})
+  cache: new InMemoryCache(),
+  
+  onError: ({ networkError, graphQLErrors }) => {
+    console.log('graphQLErrors', graphQLErrors)
+    console.log('networkError', networkError)
+  }
+});
+*/
 
 const App = () => {
+
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
@@ -43,7 +61,7 @@ const App = () => {
           <Stack.Screen 
             name="Home"
             component={HomeScreen}
-            options={{ title: 'The HomeScreen' }}
+            options={{ title: 'HomeScreen' }}
           />
         </Stack.Navigator>
         <StatusBar style="light" />

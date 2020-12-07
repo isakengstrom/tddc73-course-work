@@ -23,6 +23,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     alignSelf: 'center',
-    backgroundColor: 'red'
+    marginTop: '70%',
   }
 });
