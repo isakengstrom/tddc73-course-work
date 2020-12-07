@@ -19,4 +19,10 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  center: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    alignSelf: 'center',
+    backgroundColor: 'red'
+  }
 });

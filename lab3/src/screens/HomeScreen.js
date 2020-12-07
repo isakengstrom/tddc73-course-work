@@ -1,12 +1,48 @@
 import React from 'react'
-import { View, Text} from 'react-native'
+import { View, Text, FlatList, Pressable} from 'react-native'
+import { gql, useQuery } from '@apollo/client';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default ({ navigation }) => {
-    
+import Loading from '../components/Loading';
+
+
+const MY_QUERY = gql`
+query fetchRepos($query: String!) {
+  search(type: REPOSITORY, query: $query, first: 1) {
+    nodes {
+      ... on Repository {
+        id
+        owner 
+      }
+    }
+  }
+}
+`;
+
+export default () => {
+  const { data, loading } = useQuery(MY_QUERY, {
+    variables: {
+      query: 'stars:>1000 language:python'
+    }
+  }
+  );
+  console.log(useQuery(MY_QUERY, {
+    variables: {
+      query: 'stars:>1000 language:python'
+    }
+  }
+  ));
+
+
+  //console.log(data.search.edges.node.id.toString())
+
+  if(loading) {
+    return <Loading />
+  }
+  else console.log(data);
+
+
   return (
-    <View>
-      <Text>HomeScreen</Text>
-    </View>
+    <View></View>
   )
 }
