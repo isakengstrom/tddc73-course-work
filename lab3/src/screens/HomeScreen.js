@@ -12,6 +12,7 @@ const MY_QUERY = gql`
       nodes {
         ... on Repository {
           name
+          id
         }
       }
     }
@@ -41,7 +42,7 @@ export default () => {
     <View>
       <Text style={{color: mainGrey, fontWeight: '800' }}>Fetched data:</Text>
       {data.search.nodes.map(node => (
-        <Text>{node.name}</Text>
+        <Text key={node.id}>{node.name}</Text>
       ))}
     </View>
   )
