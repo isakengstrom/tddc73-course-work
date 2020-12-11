@@ -7,7 +7,7 @@ export default () => {
     return(
         <View style={styles.center}>
             <ActivityIndicator size="large" color={mainGrey} />
-            <Text>Loading lorem ipsum..</Text>
+            <Text>Loading repositories..</Text>
         </View>
     )
 }
