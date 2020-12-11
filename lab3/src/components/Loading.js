@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 
-import styles, { mainGrey } from './Styles';
+import styles, { mainGrey } from './StylesNew';
 
 export default () => {
     return(

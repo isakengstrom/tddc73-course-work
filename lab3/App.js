@@ -8,7 +8,7 @@ import { setContext } from '@apollo/client/link/context';
 import { GITHUB_ACCESS_TOKEN, GITHUB_ACCESS_TOKEN_NR2 } from '@env';
 import HomeScreen from './src/screens/HomeScreen';
 import RepoScreen from './src/screens/RepoScreen';
-import { screenOptions } from './src/components/Styles';
+import { screenOptions } from './src/components/StylesNew';
 
 const Stack = createStackNavigator();
 
