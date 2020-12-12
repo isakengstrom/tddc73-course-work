@@ -8,7 +8,7 @@ import { setContext } from '@apollo/client/link/context';
 import { GITHUB_ACCESS_TOKEN, GITHUB_ACCESS_TOKEN_NR2 } from '@env';
 import HomeScreen from './src/screens/HomeScreen';
 import RepoScreen from './src/screens/RepoScreen';
-import { screenOptions } from './src/components/StylesNew';
+import { screenOptions } from './src/components/Styles';
 
 const Stack = createStackNavigator();
 
@@ -28,8 +28,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-
-const App = () => {
+const App = () => {  
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
@@ -37,13 +36,13 @@ const App = () => {
           <Stack.Screen 
             name="Home"
             component={HomeScreen}
-            options={{ title: 'TRENDING REPOSITORIES' }}
+            options={{ title: 'Trending repositories' }}
           />
-          {/*<Stack.Screen
+          <Stack.Screen
             name="Repo"
             component={RepoScreen}
             options={{ title: 'RepoScreen' }}
-          />*/}
+          />
         </Stack.Navigator>
         <StatusBar style="light" />
       </NavigationContainer>     
