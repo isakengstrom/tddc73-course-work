@@ -41,7 +41,16 @@ const App = () => {
           <Stack.Screen
             name="Repo"
             component={RepoScreen}
-            options={{ title: 'RepoScreen' }}
+            options={({
+              route: {
+                params: {
+                  repo: { name },
+                },
+              },
+            }) => ({
+              title: name,
+              gestureResponseDistance: { horizontal: 500 },
+            })}
           />
         </Stack.Navigator>
         <StatusBar style="light" />
