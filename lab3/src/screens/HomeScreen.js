@@ -1,40 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, Pressable } from 'react-native'
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Picker } from '@react-native-picker/picker';
 import { Octicons, AntDesign } from '@expo/vector-icons';
 
+import { REPOS_QUERY } from '../queries/GithubQueries';
 import Loading from '../components/Loading';
 import styles, { ghWhite, ghBread } from '../components/Styles';
-
-
-const MY_QUERY = gql`
-  query ReposQuery($query: String!) {
-    search(first: 20, type: REPOSITORY, query: $query) { 
-      nodes {
-        ... on Repository {
-          name
-          id
-          description
-          nameWithOwner
-          owner {
-            login
-          }
-          forkCount
-          stargazerCount
-          updatedAt
-          languages(orderBy: {field: SIZE, direction: DESC}, first: 1) {
-            nodes {
-              name
-              color
-              id
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 
 const initialStates = {
   activeField: 0,
@@ -53,7 +25,7 @@ export default ({ navigation }) => {
     });
   };
 
-  const { loading, error, data } = useQuery(MY_QUERY, {
+  const { loading, error, data } = useQuery(REPOS_QUERY, {
     variables: {
       //query: `user:bioengstrom`
       query: `stars:>1000 forks:>1000 ${ state.language == 'any' ? '' : 'language:' + state.language }`

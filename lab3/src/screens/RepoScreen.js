@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, FlatList } from 'react-native'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { Octicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Moment from 'react-moment';
@@ -8,35 +8,7 @@ import Moment from 'react-moment';
 import Loading from '../components/Loading';
 import styles, {ghBread, ghWhite} from '../components/Styles';
 
-const REPO_QUERY = gql`
-  query RepoQuery($id: ID!) {
-    node(id: $id) {
-      id ... on Repository {
-        name
-        description
-        owner {
-          login
-        }
-        forkCount
-        stargazerCount
-        updatedAt
-        languages(orderBy: {field: SIZE, direction: DESC}, first: 1) {
-          nodes {
-            name
-            color
-            id
-          }
-        }
-        licenseInfo {
-          name
-        }
-        commitComments {
-          totalCount
-        }
-      }
-    }
-  }
-`;
+import { REPO_QUERY, COMMITS_QUERY } from '../queries/GithubQueries';
 
 export default ({ route, navigation }) => {
 
