@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { ScrollView, View, Text, FlatList, Pressable, TextInput} from 'react-native'
+import { View, Text, FlatList, Pressable } from 'react-native'
 import { gql, useQuery } from '@apollo/client';
 import { Picker } from '@react-native-picker/picker';
-import { Ionicons, Octicons, AntDesign } from '@expo/vector-icons';
+import { Octicons, AntDesign } from '@expo/vector-icons';
 
 import Loading from '../components/Loading';
 import styles, { ghWhite, ghBread } from '../components/Styles';
@@ -22,10 +22,12 @@ const MY_QUERY = gql`
           }
           forkCount
           stargazerCount
+          updatedAt
           languages(orderBy: {field: SIZE, direction: DESC}, first: 1) {
             nodes {
               name
               color
+              id
             }
           }
         }
@@ -41,7 +43,7 @@ const initialStates = {
   forks: '0',
 }
 
-export default () => {
+export default ({ navigation }) => {
   const [state, setState] = useState(initialStates);
 
   const updateState = (stateName, value) => {
@@ -53,13 +55,13 @@ export default () => {
 
   const { loading, error, data } = useQuery(MY_QUERY, {
     variables: {
+      //query: `user:bioengstrom`
       query: `stars:>1000 forks:>1000 ${ state.language == 'any' ? '' : 'language:' + state.language }`
     }
   });
   
   if(error) { 
-    console.log(error.graphQLErrors + '\n\n'+ error.networkError);
-    //console.log(error.networkError.result.error);
+    //console.log(error.graphQLErrors + '\n\n'+ error.networkError);
     return <Text>Error loading data..</Text>
   }
 
@@ -76,7 +78,6 @@ export default () => {
   }, [])
   
   const showList = () => {
-    
     if(loading) {
       return <Loading />
     }
@@ -87,7 +88,7 @@ export default () => {
         renderItem={({ item }) => (
           <RepoItem
             repo={item}
-            onPress={() => navigation.navigate('Repository', { repo: item })}
+            onPress={() => navigation.navigate('Repo', { repo: item })} 
           />
         )}
         keyExtractor={(repo) => repo.id.toString()}
@@ -96,11 +97,11 @@ export default () => {
   }
   
   const RepoItem = ({ repo, onPress }) => {
-    const { name, description, forkCount, stargazerCount, owner, languages } = repo
+    const { name, description, forkCount, stargazerCount, owner, languages, updatedAt } = repo
     const desc = String(description);
 
     return (
-      <Pressable style={styles.repoContainer} onPress={onPress}>
+      <Pressable style={styles.reposContainer} onPress={onPress}>
         <View style={styles.itemTop}>
           <Octicons name="repo" size={20} color={ghBread} />
           <View style={{marginLeft: 5,}}>
@@ -123,7 +124,7 @@ export default () => {
             <Text style={styles.repoCount}> {stargazerCount}</Text>
           </View>
           {languages.nodes.map(node => (
-            <View style={styles.countContainer}>
+            <View key={node.id} style={styles.countContainer}>
               <View style={[styles.circle, {backgroundColor: node.color}]}></View>
               <Text style={styles.repoCount}> {node.name}</Text> 
             </View>

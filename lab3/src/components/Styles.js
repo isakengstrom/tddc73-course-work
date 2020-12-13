@@ -39,7 +39,7 @@ export default StyleSheet.create({
   },
 
   //Results styling
-  repoContainer: {
+  reposContainer: {
     minHeight: 150,
     width: '94%',
     alignSelf: 'center',
@@ -57,7 +57,6 @@ export default StyleSheet.create({
     color: ghWhite,
   },
   repoOwner: {
-    //fontSize: ,
     fontStyle: 'italic',
     color: ghWhite,
     fontSize: 12,
@@ -73,7 +72,6 @@ export default StyleSheet.create({
     fontSize: 11,
     color: ghWhite,
   },
-
   
   itemTop: {
     flex: 2,
@@ -112,5 +110,25 @@ export default StyleSheet.create({
     width: '100%', 
     color: ghWhite,
     backgroundColor: ghHeader,
+  },
+
+  //RepoPage styles
+  repoContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    backgroundColor: ghBackground,
+    padding: 40,
+  },
+  repoDetails: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    maxHeight: '80%',
+    marginBottom: 100,
+    padding: 15,
   },
 });
