@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const REPOS_QUERY = gql`
   query ReposQuery($query: String!) {
-    search(first: 20, type: REPOSITORY, query: $query) { 
+    search(first: 10, type: REPOSITORY, query: $query) { 
       nodes {
         ... on Repository {
           name
@@ -16,10 +16,14 @@ export const REPOS_QUERY = gql`
           stargazerCount
           updatedAt
           languages(orderBy: {field: SIZE, direction: DESC}, first: 1) {
-            nodes {
-              name
-              color
-              id
+            totalSize
+            edges {
+              size
+              node {
+                color
+                id
+                name
+              }
             }
           }
         }
@@ -31,8 +35,10 @@ export const REPOS_QUERY = gql`
 export const REPO_QUERY = gql`
   query RepoQuery($id: ID!) {
     node(id: $id) {
-      id ... on Repository {
+      id 
+      ... on Repository {
         name
+        nameWithOwner
         description
         owner {
           login
@@ -41,19 +47,19 @@ export const REPO_QUERY = gql`
         stargazerCount
         updatedAt
         languages(orderBy: {field: SIZE, direction: DESC}, first: 1) {
-          nodes {
-            name
-            color
-            id
+          totalSize
+          edges {
+            size
+            node {
+              color
+              id
+              name
+            }
           }
         }
         licenseInfo {
           name
         }
-        commitComments {
-          totalCount
-        }
-
         ref(qualifiedName: "master") {
           target {
             ... on Commit {
@@ -71,32 +77,15 @@ export const REPO_QUERY = gql`
 export const COMMITS_QUERY = gql`
   query RepoQuery($id: ID!) {
     node(id: $id) {
-      id ... on Repository {
-        name
-        description
-        owner {
-          login
-        }
-        forkCount
-        stargazerCount
-        updatedAt
-        languages(orderBy: {field: SIZE, direction: DESC}, first: 1) {
-          nodes {
-            name
-            color
-            id
-          }
-        }
-        licenseInfo {
-          name
-        }
-
+      id 
+      ... on Repository {
         ref(qualifiedName: "master") {
           target {
             ... on Commit {
-              history(first: 1) {
+              history(first: 10) {
                 totalCount
                 nodes {
+                  id
                   messageHeadline
                   author {
                     name

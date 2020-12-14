@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
@@ -8,9 +8,20 @@ import { setContext } from '@apollo/client/link/context';
 import { GITHUB_ACCESS_TOKEN, GITHUB_ACCESS_TOKEN_NR2 } from '@env';
 import HomeScreen from './src/screens/HomeScreen';
 import RepoScreen from './src/screens/RepoScreen';
-import { screenOptions } from './src/components/Styles';
+import { screenOptions, ghBackground } from './src/components/Styles';
+
+
 
 const Stack = createStackNavigator();
+
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: ghBackground,
+    background: ghBackground,
+  },
+};
 
 const httpLink = createHttpLink({ uri: 'https://api.github.com/graphql' });
 
@@ -31,7 +42,7 @@ const client = new ApolloClient({
 const App = () => {  
   return (
     <ApolloProvider client={client}>
-      <NavigationContainer>
+      <NavigationContainer theme={MyTheme}>
         <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
           <Stack.Screen 
             name="Home"

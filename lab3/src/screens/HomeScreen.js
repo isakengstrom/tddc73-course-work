@@ -27,13 +27,12 @@ export default ({ navigation }) => {
 
   const { loading, error, data } = useQuery(REPOS_QUERY, {
     variables: {
-      //query: `user:bioengstrom`
+      //query: `user:bioengstrom ${ state.language == 'any' ? '' : 'language:' + state.language }`
       query: `stars:>1000 forks:>1000 ${ state.language == 'any' ? '' : 'language:' + state.language }`
     }
   });
   
   if(error) { 
-    //console.log(error.graphQLErrors + '\n\n'+ error.networkError);
     return <Text>Error loading data..</Text>
   }
 
@@ -51,7 +50,7 @@ export default ({ navigation }) => {
   
   const showList = () => {
     if(loading) {
-      return <Loading />
+      return <Loading itemType={'repositories'}/>
     }
 
     return(
@@ -77,8 +76,8 @@ export default ({ navigation }) => {
         <View style={styles.itemTop}>
           <Octicons name="repo" size={20} color={ghBread} />
           <View style={{marginLeft: 5,}}>
-            <Text style={styles.repoName}> {name}</Text> 
             <Text style={styles.repoOwner}>{owner.login}/</Text> 
+            <Text style={styles.repoName}> {name}</Text> 
           </View>
         </View>
         <View style={styles.itemMiddle}>
@@ -95,10 +94,10 @@ export default ({ navigation }) => {
             <AntDesign name="staro" size={16} color={ghBread} />
             <Text style={styles.repoCount}> {stargazerCount}</Text>
           </View>
-          {languages.nodes.map(node => (
-            <View key={node.id} style={styles.countContainer}>
-              <View style={[styles.circle, {backgroundColor: node.color}]}></View>
-              <Text style={styles.repoCount}> {node.name}</Text> 
+          {languages.edges.map(edge => (
+            <View key={edge.node.id} style={styles.countContainer}>
+              <View style={[styles.circle, {backgroundColor: edge.node.color}]}></View>
+              <Text style={styles.repoCount}> {edge.node.name}</Text> 
             </View>
           ))}
         </View>

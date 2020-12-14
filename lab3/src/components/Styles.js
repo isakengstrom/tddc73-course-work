@@ -42,6 +42,7 @@ export default StyleSheet.create({
   reposContainer: {
     minHeight: 150,
     width: '94%',
+    minWidth: '94%',
     alignSelf: 'center',
     margin: 10,
     marginBottom: 0,
@@ -55,12 +56,12 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: ghWhite,
+    marginBottom: 5,
   },
   repoOwner: {
     fontStyle: 'italic',
     color: ghWhite,
     fontSize: 12,
-    marginBottom: 5,
     marginLeft: 5,
   },
   repoDescription: {
@@ -119,16 +120,53 @@ export default StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    backgroundColor: ghBackground,
-    padding: 40,
+    backgroundColor: ghListItem,
+    padding: 10,
   },
-  repoDetails: {
+  
+  repoTopContainer: {
     flex: 1,
+    width: '100%',
+    //backgroundColor: 'red',
+    flexDirection: 'row', 
+    alignItems: 'center',
+  },
+  repoAboutContainer: {
+    flex: 2,
+    width: '100%',
+    marginBottom: 15,
+    //backgroundColor: 'green',
+  },
+  repoDetailsContainer: {
+    flex: 3,
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     maxHeight: '80%',
-    marginBottom: 100,
+    width: '100%',
+    //backgroundColor: ghListItem,
     padding: 15,
+  },
+  repoCommitsContainer: {
+    flex: 3,
+    width: '100%',
+  },
+
+  subTitle: {
+    color: ghBorder,
+    borderBottomWidth: 0.5,
+    borderColor: ghBorder,
+    paddingBottom: 5,
+    marginBottom: 10,
+  },
+  about: {
+    //backgroundColor: ghBackground,
+    backgroundColor: ghListItem,
+    borderColor: ghBorder,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    marginTop: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
   },
 });
