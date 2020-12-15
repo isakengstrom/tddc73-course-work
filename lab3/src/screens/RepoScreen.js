@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, ScrollView} from 'react-native';
 import { useQuery } from '@apollo/client';
-import { Octicons, AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Octicons, AntDesign, MaterialCommunityIcons, MaterialIcons, Feather } from '@expo/vector-icons';
 
 import moment from 'moment';
 
@@ -24,6 +24,20 @@ export default ({ route }) => {
       return(str.substring(0,limit) + '..');
      
     return str;
+  }
+
+  // Function from: 
+  // https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
+  const formatBytes = (bytes, decimals = 1) => {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
   
   if(error) {
@@ -82,8 +96,12 @@ export default ({ route }) => {
               <Text style={styles.repoCount}> {repo.forkCount}</Text> 
             </View>
             <View style={styles.countContainer}>
+              <Feather name="server" size={16} color={ghBread} />
+              <Text style={styles.repoCount}> {formatBytes(parseInt(repo.languages.totalSize))}</Text> 
+            </View>
+            <View style={styles.countContainer}>
               <MaterialCommunityIcons name="scale-balance" size={16} color={ghBread} />
-              <Text style={styles.repoCount}> {cutString(String(repo.licenseInfo.name), 20)}</Text> 
+              <Text style={styles.repoCount}> {cutString(String(repo.licenseInfo.name), 15)}</Text> 
             </View>
           </View>
           <View style={styles.itemRow}>

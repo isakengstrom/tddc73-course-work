@@ -132,12 +132,13 @@ export default StyleSheet.create({
   },
   
   onRepoTopContainer: {
-    flex: 1,
+    flex: 2,
     width: '100%',
     //backgroundColor: 'red',
     flexDirection: 'row', 
     alignItems: 'center',
-  },/*
+  },
+  /*
   onRepoDetailsContainer: {
     flex: 1,
     flexDirection: 'column',
@@ -146,20 +147,21 @@ export default StyleSheet.create({
     width: '100%',
     //backgroundColor: ghBorder,
     marginBottom: 10,
-  },*/
+  },
+  */
   onRepoDescriptionContainer: {
-    flex: 2,
+    flex: 3,
     width: '100%',
     marginBottom: 10,
     //backgroundColor: 'green',
   },
   onRepoCommitsContainer: {
-    flex: 4,
+    flex: 6,
     width: '100%',
     //backgroundColor: 'green',
   },
   onRepoDetailsContainer: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -167,6 +169,7 @@ export default StyleSheet.create({
     height: '100%',
     //backgroundColor: ghBorder,
     marginTop: 30,
+    marginBottom: 10,
   },
 
 

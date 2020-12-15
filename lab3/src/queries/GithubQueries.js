@@ -5,10 +5,9 @@ export const REPOS_QUERY = gql`
     search(first: 10, type: REPOSITORY, query: $query) { 
       nodes {
         ... on Repository {
-          name
           id
+          name
           description
-          nameWithOwner
           owner {
             login
           }
@@ -38,24 +37,12 @@ export const REPO_QUERY = gql`
       id 
       ... on Repository {
         name
-        nameWithOwner
         description
-        owner {
-          login
-        }
         forkCount
         stargazerCount
         updatedAt
-        languages(orderBy: {field: SIZE, direction: DESC}, first: 3) {
-          totalSize
-          edges {
-            size
-            node {
-              color
-              id
-              name
-            }
-          }
+        owner {
+          login
         }
         licenseInfo {
           name
@@ -66,6 +53,17 @@ export const REPO_QUERY = gql`
               history {
                 totalCount
               }
+            }
+          }
+        }
+        languages(orderBy: {field: SIZE, direction: DESC}, first: 3) {
+          totalSize
+          edges {
+            size
+            node {
+              color
+              id
+              name
             }
           }
         }
