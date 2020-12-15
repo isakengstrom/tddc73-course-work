@@ -22,7 +22,6 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundColor: 'red',
     height: '100%',
   },
   contentContainer: {
@@ -134,31 +133,17 @@ export default StyleSheet.create({
   onRepoTopContainer: {
     flex: 2,
     width: '100%',
-    //backgroundColor: 'red',
     flexDirection: 'row', 
     alignItems: 'center',
   },
-  /*
-  onRepoDetailsContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    width: '100%',
-    //backgroundColor: ghBorder,
-    marginBottom: 10,
-  },
-  */
   onRepoDescriptionContainer: {
     flex: 3,
     width: '100%',
     marginBottom: 10,
-    //backgroundColor: 'green',
   },
   onRepoCommitsContainer: {
     flex: 6,
     width: '100%',
-    //backgroundColor: 'green',
   },
   onRepoDetailsContainer: {
     flex: 2,
@@ -167,7 +152,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    //backgroundColor: ghBorder,
     marginTop: 30,
     marginBottom: 10,
   },
@@ -186,7 +170,6 @@ export default StyleSheet.create({
     paddingHorizontal: 5,
   },
   onRepoCommits: {
-    //backgroundColor: ghListItem,
     borderColor: ghBorder,
     borderWidth: 0.5,
     borderRadius: 5,
@@ -197,7 +180,6 @@ export default StyleSheet.create({
     paddingBottom: 10,
     borderColor: ghBorder,
     borderBottomWidth: 0.5,
-    //marginBottom: 15,
     marginTop: 10,
     marginHorizontal: 10,
   },

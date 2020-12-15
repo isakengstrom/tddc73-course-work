@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Text, FlatList} from 'react-native';
 import { useQuery } from '@apollo/client';
-import { MaterialIcons } from '@expo/vector-icons';
 
 import moment from 'moment';
 
 import Loading from './Loading';
-import styles, {ghBread, ghWhite, ghBorder, ghBackground} from './Styles';
+import styles, {ghBread, ghBorder, ghBackground} from './Styles';
 import { COMMITS_QUERY } from '../queries/GithubQueries';
 const CommitContainer = ({repoId}) => {
 

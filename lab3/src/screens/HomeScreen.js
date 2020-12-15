@@ -27,7 +27,6 @@ export default ({ navigation }) => {
 
   const { loading, error, data } = useQuery(REPOS_QUERY, {
     variables: {
-      //query: `user:bioengstrom ${ state.language == 'any' ? '' : 'language:' + state.language }`
       query: `stars:>1000 forks:>1000 ${ state.language == 'any' ? '' : 'language:' + state.language }`
     }
   });
@@ -36,7 +35,7 @@ export default ({ navigation }) => {
     return <Text>Error loading data..</Text>
   }
 
-  // Debug function which loads query on a save from every file
+  // Debug function which loads query on a save from every file. Works similar to componentDidMount()
   useEffect(() => {
     setTimeout(() => {
       if(state.language == 'any'){
