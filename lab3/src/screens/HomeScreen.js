@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, FlatList, Pressable } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { useQuery } from '@apollo/client';
 import { Picker } from '@react-native-picker/picker';
 import { Octicons, AntDesign } from '@expo/vector-icons';
@@ -72,7 +72,7 @@ export default ({ navigation }) => {
     const desc = description ? String(description) : 'No description available.';
 
     return (
-      <Pressable style={styles.reposContainer} onPress={onPress}>
+      <TouchableOpacity style={styles.reposContainer} onPress={onPress}>
         <View style={styles.itemTop}>
           <Octicons name="repo" size={20} color={ghBread} />
           <View style={{marginLeft: 5,}}>
@@ -101,7 +101,7 @@ export default ({ navigation }) => {
             </View>
           ))}
         </View>
-      </Pressable>
+      </TouchableOpacity>
     )
   }
 
