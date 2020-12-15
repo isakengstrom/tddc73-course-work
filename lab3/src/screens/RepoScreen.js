@@ -39,6 +39,13 @@ export default ({ route }) => {
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
+
+  const formatPercentage = (part, total, decimals = 1) => {
+    if (part === 0) return '0%';
+
+    const dm = decimals < 0 ? 0 : decimals;
+    return parseFloat(((part / total) * 100).toFixed(dm)) + '%';
+  } 
   
   if(error) {
     return <Text>Error loading repository..</Text>
@@ -108,7 +115,7 @@ export default ({ route }) => {
             {repo.languages.edges.map(edge => (
               <View key={edge.node.id} style={styles.countContainer}>
                 <View style={[styles.circle, {backgroundColor: edge.node.color}]}></View>
-                <Text style={styles.repoCount}> {edge.node.name}</Text> 
+                <Text style={styles.repoCount}> {edge.node.name} ({formatPercentage(edge.size, repo.languages.totalSize )})</Text> 
               </View>
             ))}
           </View>
