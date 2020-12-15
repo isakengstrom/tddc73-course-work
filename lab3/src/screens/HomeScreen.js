@@ -27,6 +27,7 @@ export default ({ navigation }) => {
 
   const { loading, error, data } = useQuery(REPOS_QUERY, {
     variables: {
+      //query: `user:bioengstrom ${ state.language == 'any' ? '' : 'language:' + state.language }`
       query: `stars:>1000 forks:>1000 ${ state.language == 'any' ? '' : 'language:' + state.language }`
     }
   });
@@ -68,7 +69,7 @@ export default ({ navigation }) => {
   
   const RepoItem = ({ repo, onPress }) => {
     const { name, description, forkCount, stargazerCount, owner, languages, updatedAt } = repo
-    const desc = String(description);
+    const desc = description ? String(description) : 'No description available.';
 
     return (
       <Pressable style={styles.reposContainer} onPress={onPress}>

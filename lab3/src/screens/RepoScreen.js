@@ -66,7 +66,7 @@ export default ({ route }) => {
             <Octicons name="repo" size={20} color={ghBread} />
             <View style={{marginLeft: 5,}}>
               <Text style={styles.repoOwner}>{repo.owner.login}/</Text> 
-              <Text style={styles.repoName}> {repo.name}</Text> 
+              <Text style={[styles.repoName, {fontSize: 22}]}> {repo.name}</Text> 
             </View>
           </View>
         </View>
@@ -75,7 +75,7 @@ export default ({ route }) => {
         <View style={styles.onRepoDescriptionContainer}>
           <Text style={styles.subTitle}>Description</Text>
           <ScrollView style={styles.onRepoDescription}>
-            <Text style={{color: ghBread, marginStart: 5,}}>{repo.description}{/*Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.*/}</Text>
+            <Text style={{color: ghBread, marginStart: 5,}}>{repo.description ? repo.description : 'No description available.'}</Text>
           </ScrollView>
         </View>
 
@@ -84,7 +84,7 @@ export default ({ route }) => {
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={[styles.countContainer, {marginStart: 0, marginBottom: 5,}]}>
               <MaterialIcons name="history" size={16} color={ghBread} />
-              <Text style={{color: ghWhite}}> {repo.ref.target.history.totalCount}</Text>
+              <Text style={{color: ghWhite}}> {repo.ref ? repo.ref.target.history.totalCount : '0'}</Text>
               <Text style={{color: ghBread}}> commits</Text>
             </View>
           </View>
@@ -108,7 +108,7 @@ export default ({ route }) => {
             </View>
             <View style={styles.countContainer}>
               <MaterialCommunityIcons name="scale-balance" size={16} color={ghBread} />
-              <Text style={styles.repoCount}> {cutString(String(repo.licenseInfo.name), 15)}</Text> 
+              <Text style={styles.repoCount}> {repo.licenseInfo ? cutString(String(repo.licenseInfo.name), 15) : 'No license'}</Text> 
             </View>
           </View>
           <View style={styles.itemRow}>

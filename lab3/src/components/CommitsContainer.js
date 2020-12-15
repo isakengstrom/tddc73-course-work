@@ -36,8 +36,11 @@ const CommitContainer = ({repoId}) => {
     if(loading) {
       return <Loading itemType={'commits'} />
     }
+    else if (!data.node.ref) {
+      return(<View></View>);
+    }
     else {
-      return( 
+      return(
         <FlatList
           data={data.node.ref.target.history.nodes}
           renderItem={({ item }) => (
