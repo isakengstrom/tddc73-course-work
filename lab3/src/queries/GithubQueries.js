@@ -46,7 +46,7 @@ export const REPO_QUERY = gql`
         forkCount
         stargazerCount
         updatedAt
-        languages(orderBy: {field: SIZE, direction: DESC}, first: 1) {
+        languages(orderBy: {field: SIZE, direction: DESC}, first: 3) {
           totalSize
           edges {
             size
@@ -82,7 +82,7 @@ export const COMMITS_QUERY = gql`
         ref(qualifiedName: "master") {
           target {
             ... on Commit {
-              history(first: 10) {
+              history(first: 100) {
                 totalCount
                 nodes {
                   id

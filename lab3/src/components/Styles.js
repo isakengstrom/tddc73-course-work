@@ -19,10 +19,11 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   center: {
-    alignItems: 'center',
     flexDirection: 'column',
-    alignSelf: 'center',
-    marginTop: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    //backgroundColor: 'red',
+    height: '100%',
   },
   contentContainer: {
     flex: 1,
@@ -86,6 +87,12 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: "row-reverse",
   },
+
+  itemRow: {
+    flex: 1,
+    flexDirection: "row",
+    marginBottom: 10,
+  },
   
   countContainer: {
     flexDirection: 'row',
@@ -124,49 +131,82 @@ export default StyleSheet.create({
     padding: 10,
   },
   
-  repoTopContainer: {
+  onRepoTopContainer: {
     flex: 1,
     width: '100%',
     //backgroundColor: 'red',
     flexDirection: 'row', 
     alignItems: 'center',
-  },
-  repoAboutContainer: {
-    flex: 2,
-    width: '100%',
-    marginBottom: 15,
-    //backgroundColor: 'green',
-  },
-  repoDetailsContainer: {
-    flex: 3,
+  },/*
+  onRepoDetailsContainer: {
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    maxHeight: '80%',
     width: '100%',
-    //backgroundColor: ghListItem,
-    padding: 15,
+    //backgroundColor: ghBorder,
+    marginBottom: 10,
+  },*/
+  onRepoDescriptionContainer: {
+    flex: 2,
+    width: '100%',
+    marginBottom: 10,
+    //backgroundColor: 'green',
   },
-  repoCommitsContainer: {
-    flex: 3,
+  onRepoCommitsContainer: {
+    flex: 4,
     width: '100%',
+    //backgroundColor: 'green',
+  },
+  onRepoDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    //backgroundColor: ghBorder,
+    marginTop: 30,
   },
 
+
   subTitle: {
-    color: ghBorder,
-    borderBottomWidth: 0.5,
-    borderColor: ghBorder,
-    paddingBottom: 5,
-    marginBottom: 10,
+    color: ghBread,
+    marginBottom: 5,
   },
-  about: {
-    //backgroundColor: ghBackground,
+  onRepoDescription: {
     backgroundColor: ghListItem,
     borderColor: ghBorder,
     borderWidth: 0.5,
     borderRadius: 5,
-    marginTop: 5,
     paddingVertical: 10,
     paddingHorizontal: 5,
+  },
+  onRepoCommits: {
+    //backgroundColor: ghListItem,
+    borderColor: ghBorder,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    height: '100%',
+  },
+  commitContainer: {
+    paddingBottom: 10,
+    borderColor: ghBorder,
+    borderBottomWidth: 0.5,
+    //marginBottom: 15,
+    marginTop: 10,
+    marginHorizontal: 10,
+  },
+  
+  commitHeader: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'baseline',
+    marginBottom: 5,
+  }, 
+  commitMessage: {
+    color: ghBread, 
+    marginHorizontal: 5,
   },
 });
