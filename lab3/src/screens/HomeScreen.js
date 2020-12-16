@@ -27,7 +27,6 @@ export default ({ navigation }) => {
 
   const { loading, error, data } = useQuery(REPOS_QUERY, {
     variables: {
-      //query: `user:bioengstrom ${ state.language == 'any' ? '' : 'language:' + state.language }`
       query: `stars:>1000 forks:>1000 ${ state.language == 'any' ? '' : 'language:' + state.language }`
     }
   });

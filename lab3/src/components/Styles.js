@@ -183,7 +183,6 @@ export default StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 10,
   },
-  
   commitHeader: {
     flexDirection: 'row',
     flex: 1,
