@@ -2,8 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 
-import Form from './src/components/form/Form';
-import fieldArray from './src/components/form/fieldArray';
+import Form from './src/components/formV2/FormV2';
+import fieldArray from './src/components/formV2/fieldArrayV2';
+import PasswordValidator from './src/components/passwordValidatorV2/PasswordValidatorV2';
+
 
 const App = () => {
   return (
@@ -11,6 +13,7 @@ const App = () => {
       <View style={styles.formContainer}>
         <Form 
           fields={fieldArray}
+          //passwordValidator={<PasswordValidator password={state.password || ''}/>}
           titleCustomization={{
             titleText: 'SIGN UP!',
             titleStyling: {fontFamily: 'Avenir'}}}

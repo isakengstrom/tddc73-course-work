@@ -22,7 +22,7 @@ const PasswordValidator = ( props ) => {
   const upperCaseCheck = /[A-Z]/;
   let strength = 0;
 
-  const hej = () => {
+  
 
     if(props.password.length > 8) {
       strength++; 
@@ -39,16 +39,13 @@ const PasswordValidator = ( props ) => {
     if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
       strength++; 
     }
-  }
+  
 
   
 
   const status = () => {
     const arr = [0, 1, 2, 3, 4, 5];  
-    const colors = ['#d9543f', '#d9543f', '#f0ad4e', '#f0ad4e', '#5cb85c', '#5cb85c']
-    hej();
-    console.log(props.password);
-    
+    const colors = ['#d9543f', '#d9543f', '#f0ad4e', '#f0ad4e', '#5cb85c', '#5cb85c']    
     
     return(
       <View style={{flexDirection: 'row', marginRight: 5, alignSelf: 'flex-end'}}>
