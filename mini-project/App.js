@@ -1,27 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, KeyboardAvoidingView} from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 
-import Form from './src/components/Form';
+import Form from './src/components/form/Form';
+import fieldArray from './src/components/form/fieldArray';
 
-const fieldNames = [
-  {fieldType: 'email', isRequired: true, placeholder: 'email@email.com'}, 
-  {fieldType: 'password'},
-];
-
-export default function App() {
+const App = () => {
   return (
     <View style={styles.container}>
-      <Form 
-        email={true}
-        password={true}
-        name={true}
-        user={true}
-      />
+      <View style={styles.formContainer}>
+        <Form 
+          fields={fieldArray}
+          titleCustomization={{
+            titleText: 'SIGN UP!',
+            titleStyling: {fontFamily: 'Avenir'}}}
+          buttonCustomization={{
+            buttonText: 'SUBMIT', 
+            buttonStyling: {backgroundColor: 'rgb(250, 100, 20)'}, 
+            buttonTextStyling: {fontFamily: 'Avenir'}}}
+        />
+      </View>
       <StatusBar style="auto"/>
     </View>
   );
 }
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -30,4 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  formContainer: {
+    width: '70%',
+  },  
 });

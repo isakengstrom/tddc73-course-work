@@ -22,34 +22,34 @@ const PasswordValidator = ( props ) => {
   const upperCaseCheck = /[A-Z]/;
   let strength = 0;
 
-  //console.log('\n');
-  if(props.password.length > 8) {
-    strength++; 
-    //console.log('length > 8');
-  }
-  if(props.password.length > 12) {
-    strength++; 
-    //console.log('length > 12');
-  }
-  if(specialCharsCheck.test(props.password)) {
-    strength++; 
-    //console.log('special chars');
-  }
-  if(numbCheck.test(props.password)) {
-    strength++; 
-    //console.log('numbers');
-  }
-  if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
-    strength++; 
-    //console.log('lower & upper case');
+  const hej = () => {
+
+    if(props.password.length > 8) {
+      strength++; 
+    }
+    if(props.password.length > 12) {
+      strength++; 
+    }
+    if(specialCharsCheck.test(props.password)) {
+      strength++; 
+    }
+    if(numbCheck.test(props.password)) {
+      strength++; 
+    }
+    if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
+      strength++; 
+    }
   }
 
-  //console.log('Strength: ' + strength);
+  
 
   const status = () => {
     const arr = [0, 1, 2, 3, 4, 5];  
     const colors = ['#d9543f', '#d9543f', '#f0ad4e', '#f0ad4e', '#5cb85c', '#5cb85c']
-
+    hej();
+    console.log(props.password);
+    
+    
     return(
       <View style={{flexDirection: 'row', marginRight: 5, alignSelf: 'flex-end'}}>
         <Text style={styles.feedbackText}>
@@ -84,15 +84,15 @@ export default PasswordValidator;
 
 const styles = StyleSheet.create({
   circle: {
-    height: 8,
-    width: 8,
+    height: 7,
+    width: 7,
     margin: 2,
     backgroundColor: 'gray',
     borderRadius: 5,
   },
   feedbackText: {
     color: 'gray',
-    fontSize: 10,
+    fontSize: 9,
     marginRight: 5,
   }
 });
