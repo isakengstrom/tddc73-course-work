@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, EdgeInsetsPropType } from 'react-native';
 import PropTypes from 'prop-types';
 
-import PasswordValidator from '../passwordValidatorV2/PasswordValidatorV2';
-import fieldArrayV2 from './fieldArrayV2';
+import PasswordValidator from '../passwordValidator/PasswordValidator';
+import fieldArrayV2 from './fieldArray';
 
   
 const defaultFieldProps = [

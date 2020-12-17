@@ -2,9 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 
-import Form from './src/components/formV2/FormV2';
-import fieldArray from './src/components/formV2/fieldArrayV2';
-import PasswordValidator from './src/components/passwordValidatorV2/PasswordValidatorV2';
+import Form from './src/components/form/Form';
+import fieldArray from './src/components/form/fieldArray';
+import PasswordValidator from './src/components/passwordValidator/PasswordValidator';
 
 
 const App = () => {

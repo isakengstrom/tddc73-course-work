@@ -22,25 +22,21 @@ const PasswordValidator = ( props ) => {
   const upperCaseCheck = /[A-Z]/;
   let strength = 0;
 
-  
-
-    if(props.password.length > 8) {
-      strength++; 
-    }
-    if(props.password.length > 12) {
-      strength++; 
-    }
-    if(specialCharsCheck.test(props.password)) {
-      strength++; 
-    }
-    if(numbCheck.test(props.password)) {
-      strength++; 
-    }
-    if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
-      strength++; 
-    }
-  
-
+  if(props.password.length > 8) {
+    strength++; 
+  }
+  if(props.password.length > 12) {
+    strength++; 
+  }
+  if(specialCharsCheck.test(props.password)) {
+    strength++; 
+  }
+  if(numbCheck.test(props.password)) {
+    strength++; 
+  }
+  if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
+    strength++; 
+  }
   
 
   const status = () => {
