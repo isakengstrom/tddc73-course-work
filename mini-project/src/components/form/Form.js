@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, EdgeInsetsPropType } from 'react-native';
 import PropTypes from 'prop-types';
 
 import PasswordValidator from '../passwordValidator/PasswordValidator';
-import fieldArrayV2 from './fieldArray';
-
   
 const defaultFieldProps = [
   {
@@ -82,51 +80,63 @@ const defaultForm = [
 ];
 
 const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-let initialStates = {}
+
 
 const Form = ( props ) =>  {
-  
-  useEffect(() => { 
+  let initialFieldText = {};
+
+  const [ state, setState ] = useState(useMemo(() => {
     let tempName = null;
     
-    fieldArrayV2.map((edge, eInd) => {
+    props.fields.map((edge, eInd) => {
       edge.map((node, nInd) => {
         tempName = node.type;
         if(node.type == 'text') {
           tempName = node.type+eInd+nInd;
         }
-        initialStates = {
-          ... initialStates,
-          [tempName] : '',
+        
+        initialFieldText = {
+          ... initialFieldText,
+          [tempName]: '' 
         }
+
+        /*
+        initialFieldText = {
+          ... initialFieldText,
+          types: {
+            ...initialFieldText.types,
+            [tempName]: '',  
+          } 
+        }
+        */
       })
-    })
-  }, []);
-  
-  const [ state, setState ] = useState(initialStates); 
+    });
+
+    return initialFieldText;
+  })
+
+
+  ); 
   
   const updateState = (stateName, value) => {
-    setState({
-      ...state,
+    setState(prevState => ({
+      ...prevState,
       [stateName]: value 
-    });
+    }));
   };
 
   const isNotReadyToSubmit = () => {
-    let disable = false;
     
     if(Object.keys(state).length == 0) {
-      disable = true;
+      return true;
     }
-    Object.keys(initialStates).map((key) => {
-      if(!Object.keys(state).includes(key)) {
-        disable = true;
-      }
-    });
+    
+    let disable = false;
     Object.keys(state).map((key) => {
-      if( (state[key] == '')
-        || ((key == 'email') && !emailCheck.test(state[key]))
-        || ((key == 'emailConfirmation') && (state.email != state.emailConfirmation))
+      if( 
+        (state[key] == '') || 
+        ((key == 'email') && !emailCheck.test(state[key])) || 
+        ((key == 'emailConfirmation') && (state.email != state.emailConfirmation))
         || ((key == 'password') && (state[key].length < 8))
         || ((key == 'passwordConfirmation') && (state.password != state.passwordConfirmation))
       ) {
@@ -138,10 +148,11 @@ const Form = ( props ) =>  {
 
   const onSubmitDefault = () => {
     Keyboard.dismiss();
-    setState(initialStates);
+    setState(initialFieldText);
   }; 
 
   const renderFields = () => {
+    console.log(state);
     return(
       <View >
         {props.fields.map((edge, eIndex) => {
@@ -188,7 +199,7 @@ const Form = ( props ) =>  {
   return(
     <View style={styles.formContainer}>
       <Text style={[styles.title, props.titleCustomization.titleStyling || null]}>
-        {props.titleCustomization.titleText}
+        {props.titleCustomization.titleText || 'Form'}
       </Text>
       {renderFields()}
       <TouchableOpacity 

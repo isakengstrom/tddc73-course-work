@@ -1,5 +1,5 @@
 
-export default fieldArray = [
+export const customSignUpArray = [
     [
       {
         type: 'text', 
