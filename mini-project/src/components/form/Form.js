@@ -81,78 +81,104 @@ const defaultForm = [
 
 const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-
 const Form = ( props ) =>  {
-  let initialFieldText = {};
+
+  let initialFields = { };
 
   const [ state, setState ] = useState(useMemo(() => {
-    let tempName = null;
-    
     props.fields.map((edge, eInd) => {
-      edge.map((node, nInd) => {
-        tempName = node.type;
-        if(node.type == 'text') {
-          tempName = node.type+eInd+nInd;
-        }
+      edge.map(( node , nInd) => {
         
-        initialFieldText = {
-          ... initialFieldText,
-          [tempName]: '' 
+        initialFields = {
+          ... initialFields,
+          [eInd.toString()+nInd]: [node.type, '', node.key || null] 
         }
-
-        /*
-        initialFieldText = {
-          ... initialFieldText,
-          types: {
-            ...initialFieldText.types,
-            [tempName]: '',  
-          } 
-        }
-        */
       })
     });
+    
+    //console.log(initialFields);
+    return initialFields;
+  })); 
 
-    return initialFieldText;
-  })
+  const [ confirmations, setConfirmations ] = useState(useMemo(() => {
+    let initialConfirmations = {};
+    
+    Object.entries(initialFields).map(([ field, [type, text, inKey]]) => {
+      if(type == 'confirmation'){
+        initialConfirmations = {
+          ...initialConfirmations,
+          [field]: {
+            key: inKey,
+            matches: []   
+          }
+        }
+      }
+    });
 
+    let matchingFields = [];
 
-  ); 
-  
-  const updateState = (stateName, value) => {
+    Object.entries(initialConfirmations).map(([ conf, values ]) => {
+      matchingFields = [];
+      Object.entries(initialFields).map(([ field , [type, text, innerKey]]) => {        
+        if(type != 'confirmation' && innerKey == values.key){
+          matchingFields = matchingFields.concat(field);
+          initialConfirmations = {
+            ...initialConfirmations,
+            [conf]: {
+              ...values.matches,
+              key: values.key,
+              matches: matchingFields
+            }
+          }
+        }
+      });
+    });
+
+    //console.log(initialConfirmations);
+    return initialConfirmations;
+  })); 
+
+  const updateState = (stateName, type, text, key) => {
     setState(prevState => ({
       ...prevState,
-      [stateName]: value 
+      [stateName]: [
+        type,
+        text, 
+        key,
+      ]
     }));
   };
 
   const isNotReadyToSubmit = () => {
-    
-    if(Object.keys(state).length == 0) {
-      return true;
-    }
-    
+  
     let disable = false;
-    Object.keys(state).map((key) => {
-      if( 
-        (state[key] == '') || 
-        ((key == 'email') && !emailCheck.test(state[key])) || 
-        ((key == 'emailConfirmation') && (state.email != state.emailConfirmation))
-        || ((key == 'password') && (state[key].length < 8))
-        || ((key == 'passwordConfirmation') && (state.password != state.passwordConfirmation))
+    
+    Object.entries(confirmations).map( conf => {
+      Object.entries(conf[1].matches).map(entry => {
+        if(state[conf[0]][1] != state[entry[1]][1]) 
+          disable = true;
+      });
+    });
+    
+    Object.entries(state).map(([ _ , [type, text, __ ]]) => {
+      
+      if( ((type == 'email') && !emailCheck.test(text)) 
+        || ((type == 'password') && (text.length < 8))
       ) {
         disable = true;
       }
     });
+
     return disable;
   };
 
   const onSubmitDefault = () => {
     Keyboard.dismiss();
-    setState(initialFieldText);
+    setState(initialFields);
   }; 
 
   const renderFields = () => {
-    console.log(state);
+    //console.log(state);
     return(
       <View >
         {props.fields.map((edge, eIndex) => {
@@ -163,18 +189,18 @@ const Form = ( props ) =>  {
                   <View key={nIndex} style={styles.fieldContainer}>
                     <Text style={styles.instructionText}>{node.label || 'Input'}:</Text>
                     <TextInput 
-                      style={[styles.textInput, node.styling || null]} 
+                      //onFocus={() => setActiveField()}
+                      style={[styles.textInput, node.styling || null ]} 
                       placeholder={node.placeholder || 'placeholder'}
-                      value={state[(node.type == 'text') ? node.type+eIndex+nIndex : node.type]}
-                      onChangeText={ (text) => 
-                        updateState((node.type == 'text') ? node.type+eIndex+nIndex : node.type, text)}
+                      value={state[eIndex.toString()+nIndex][1]}
+                      onChangeText={ (text) => updateState(eIndex.toString()+nIndex, node.type, text, node.key)}
                       maxLength={node.maxLength || null}
                       keyboardType={node.keyboardType || null}
                       secureTextEntry={node.secureTextEntry || null}
                     />
                     { 
                     //props.PasswordValidator ? props.PasswordValidator : null
-                      (node.validation && node.type == 'password') ? <PasswordValidator password={state.password || ''}/> : null
+                      (node.validation ) ? <PasswordValidator password={state[eIndex.toString()+nIndex][1] || ''}/> : null
                     }
                     {node.type.includes('Confirmation') 
                       ? <Text style={styles.nomatchText}>
@@ -221,7 +247,7 @@ Form.propTypes = {
   onSubmit: PropTypes.func,
   fields: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
     type: PropTypes.oneOf([
-      'text', 'email', 'emailConfirmation', 'password', 'passwordConfirmation'
+      'text', 'email', 'password', 'confirmation',
     ]).isRequired,
     value: PropTypes.string,
     label: PropTypes.string, 
@@ -232,6 +258,7 @@ Form.propTypes = {
     secureTextEntry: PropTypes.bool,
     validation: PropTypes.bool,
     styling: PropTypes.object,
+    key: PropTypes.string,
   }))),
   titleCustomization: PropTypes.shape({
     titleText: PropTypes.string,
@@ -304,5 +331,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
-  }
+  },
+  activeField: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0.5, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 5,
+  },
 });

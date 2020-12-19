@@ -38,6 +38,7 @@ const PasswordValidator = ( props ) => {
     strength++; 
   }
   
+
   const status = () => {
     const arr = [0, 1, 2, 3, 4, 5];  
     const colors = ['#d9543f', '#d9543f', '#f0ad4e', '#f0ad4e', '#5cb85c', '#5cb85c']    
