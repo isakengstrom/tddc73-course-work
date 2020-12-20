@@ -1,83 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, EdgeInsetsPropType } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import PropTypes from 'prop-types';
 
 import PasswordValidator from '../passwordValidator/PasswordValidator';
-  
-const defaultFieldProps = [
-  {
-    type: 'text', 
-    label: 'Input',
-    placeholder: '',
-    isRequired: false,
-    maxLength: null,
-    keyboardType: null,
-    secureTextEntry: false,
-    validation: null,
-  },
-  {
-    type: 'email', 
-    label: 'Email',
-    placeholder: 'bob@mail.com',
-    isRequired: true,
-    maxLength: null,
-    keyboardType: null,
-    secureTextEntry: false,
-    validation: null,
-  },  
-  {
-    type: 'emailConfirmation', 
-    label: 'Confirm Email',
-    placeholder: 'Enter again',
-    isRequired: true,
-    maxLength: null,
-    keyboardType: null,
-    secureTextEntry: false,
-    validation: null,
-  },  
-  {
-    type: 'password', 
-    label: 'Password',
-    placeholder: '',
-    isRequired: true,
-    maxLength: null,
-    keyboardType: null,
-    secureTextEntry: true,
-    validation: true,
-  },
-  {
-    type: 'passwordConfirmation', 
-    label: 'Confirm Password',
-    placeholder: '',
-    isRequired: true,
-    maxLength: null,
-    keyboardType: null,
-    secureTextEntry: true,
-    validation: null,
-  },
-   
-];
-
-const defaultForm = [
-  [{
-      type: 'text', 
-      label: 'Username', 
-      placeholder: '',
-      isRequired: true, 
-    }],
-  [{
-      type: 'email', 
-      label: 'Email', 
-      placeholder: 'email@email.com',
-      isRequired: true, 
-    }],
-  [{
-      type: 'password', 
-      label: 'Password', 
-      placeholder: '',
-      isRequired: true, 
-    }],
-];
+import { defaultFieldProps, defaultForm } from './defaultForms';
 
 const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -134,7 +60,6 @@ const Form = ( props ) =>  {
       });
     });
 
-    //console.log(initialConfirmations);
     return initialConfirmations;
   })); 
 
@@ -161,12 +86,8 @@ const Form = ( props ) =>  {
     });
     
     Object.entries(state).map(([ _ , [type, text, __ ]]) => {
-      
-      if( ((type == 'email') && !emailCheck.test(text)) 
-        || ((type == 'password') && (text.length < 8))
-      ) {
+      if(((type == 'email') && !emailCheck.test(text)) || ((type == 'password') && (text.length < 8)))
         disable = true;
-      }
     });
 
     return disable;
@@ -185,6 +106,25 @@ const Form = ( props ) =>  {
           return(
             <View key={eIndex} style={styles.fieldsContainer}>
               {edge.map((node, nIndex) =>  {
+
+                const checkMatch = () => {
+                  // TODO: FIX THIS 
+                  return(
+                    <View>{
+                      node.type == 'confirmation' 
+                        ? <Text style={styles.nomatchText}>FIX THIS
+                            { (!state[node.type] || state[node.type] == '')
+                              ? null 
+                              : (state[node.type.split('C')[0]] != state[node.type]) 
+                                ? "Fields don't match :(" 
+                                : "It's a match!" }
+                          </Text>
+                        : null
+                    }</View>
+                  );
+                }
+
+
                 return(
                   <View key={nIndex} style={styles.fieldContainer}>
                     <Text style={styles.instructionText}>{node.label || 'Input'}:</Text>
@@ -202,16 +142,7 @@ const Form = ( props ) =>  {
                     //props.PasswordValidator ? props.PasswordValidator : null
                       (node.validation ) ? <PasswordValidator password={state[eIndex.toString()+nIndex][1] || ''}/> : null
                     }
-                    {node.type.includes('Confirmation') 
-                      ? <Text style={styles.nomatchText}>
-                        { (!state[node.type] || state[node.type] == '')
-                          ? null 
-                          : (state[node.type.split('C')[0]] != state[node.type]) 
-                            ? "Fields don't match :(" 
-                            : "It's a match!" }
-                      </Text>
-                      : null
-                    }
+                    {checkMatch()}
                   </View>
                 );
               })}
