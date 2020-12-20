@@ -53,22 +53,28 @@ export const defaultFieldProps = [
 ];
 
 export const defaultForm = [
-    [{
-        type: 'text', 
-        label: 'Username', 
-        placeholder: '',
-        isRequired: true, 
-      }],
-    [{
-        type: 'email', 
-        label: 'Email', 
-        placeholder: 'email@email.com',
-        isRequired: true, 
-      }],
-    [{
-        type: 'password', 
-        label: 'Password', 
-        placeholder: '',
-        isRequired: true, 
-      }],
-  ];
+  [
+    {
+      type: 'text', 
+      label: 'Username', 
+      placeholder: '',
+      isRequired: true, 
+    }
+  ],
+  [
+    {
+      type: 'email', 
+      label: 'Email', 
+      placeholder: 'email@email.com',
+      isRequired: true, 
+    }
+  ],
+  [
+    {
+      type: 'password', 
+      label: 'Password', 
+      placeholder: '',
+      isRequired: true, 
+    }
+  ],
+];

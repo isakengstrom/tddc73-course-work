@@ -80,12 +80,24 @@ const Form = ( props ) =>  {
     Keyboard.dismiss();
   }
 
+  const isFieldMatch = (conf) => {
+    let match = true;
+    
+    Object.entries(confirmations[conf].matches).map(entry => {
+      if(state[conf][1] != state[entry[1]][1]) 
+        match = false;
+    });
+    
+    return match;
+  }
+
   const isNotReadyToSubmit = () => {
   
     let disable = false;
     
-    Object.entries(confirmations).map( conf => {
+    Object.entries(confirmations).map(conf => {
       Object.entries(conf[1].matches).map(entry => {
+        //console.log(conf);
         if(state[conf[0]][1] != state[entry[1]][1]) 
           disable = true;
       });
@@ -105,8 +117,8 @@ const Form = ( props ) =>  {
   }; 
 
   const renderFields = () => {
-    console.log(state);
-    
+    //console.log(state);
+    //console.log(confirmations);
     return(
       <View >
         {props.fields.map((edge, eIndex) => {
@@ -115,23 +127,27 @@ const Form = ( props ) =>  {
               {edge.map((node, nIndex) =>  {
 
                 const getValidator = () => {
+                  //console.log(state[getFieldName()][1])
                   return((node.validation ) ? <PasswordValidator password={state[getFieldName()][1] || ''}/> : null);
                 }
 
                 const checkMatch = () => {
-                  // TODO: FIX THIS 
+                  
+                  let text = null;
+
+                  if(node.type == 'confirmation'){
+                    if(state[getFieldName()][1] && !state[getFieldName()][1] == ''){
+                      if(isFieldMatch(getFieldName()))
+                        text = "It's a match!";
+                      else 
+                        text = "Fields don't match :(";
+                    }
+                  }
+                  
                   return(
-                    <View>{
-                      node.type == 'confirmation' 
-                        ? <Text style={styles.nomatchText}>FIX THIS
-                            { (!state[node.type] || state[node.type] == '')
-                              ? null 
-                              : (state[node.type.split('C')[0]] != state[node.type]) 
-                                ? "Fields don't match :(" 
-                                : "It's a match!" }
-                          </Text>
-                        : null
-                    }</View>
+                    <View>
+                      {node.type == 'confirmation' ? <Text style={styles.nomatchText}>{text}</Text> : null}
+                    </View>
                   );
                 }
 
