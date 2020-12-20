@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
+import React, { useState, useMemo, useEffect, useRef} from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import PropTypes from 'prop-types';
 
 import PasswordValidator from '../passwordValidator/PasswordValidator';
@@ -13,10 +13,9 @@ const Form = ( props ) =>  {
 
   const [ state, setState ] = useState(useMemo(() => {
     props.fields.map((edge, eInd) => {
-      edge.map(( node , nInd) => {
-        
+      edge.map((node, nInd) => {
         initialFields = {
-          ... initialFields,
+          ...initialFields,
           [eInd.toString()+nInd]: [node.type, '', node.key || null] 
         }
       })
@@ -26,7 +25,7 @@ const Form = ( props ) =>  {
     return initialFields;
   })); 
 
-  const [ confirmations, setConfirmations ] = useState(useMemo(() => {
+  const confirmations = useMemo(() => {
     let initialConfirmations = {};
     
     Object.entries(initialFields).map(([ field, [type, text, inKey]]) => {
@@ -61,7 +60,9 @@ const Form = ( props ) =>  {
     });
 
     return initialConfirmations;
-  })); 
+  }); 
+
+  const [ activeField, setActiveField] = useState('');
 
   const updateState = (stateName, type, text, key) => {
     setState(prevState => ({
@@ -73,6 +74,11 @@ const Form = ( props ) =>  {
       ]
     }));
   };
+
+  const deactivateFocus = () => {
+    setActiveField('');
+    Keyboard.dismiss();
+  }
 
   const isNotReadyToSubmit = () => {
   
@@ -99,13 +105,18 @@ const Form = ( props ) =>  {
   }; 
 
   const renderFields = () => {
-    //console.log(state);
+    console.log(state);
+    
     return(
       <View >
         {props.fields.map((edge, eIndex) => {
           return(
             <View key={eIndex} style={styles.fieldsContainer}>
               {edge.map((node, nIndex) =>  {
+
+                const getValidator = () => {
+                  return((node.validation ) ? <PasswordValidator password={state[getFieldName()][1] || ''}/> : null);
+                }
 
                 const checkMatch = () => {
                   // TODO: FIX THIS 
@@ -124,24 +135,28 @@ const Form = ( props ) =>  {
                   );
                 }
 
+                const activeStyle = () => {
+                  return activeField == getFieldName() ? styles.activeField : null;
+                }
+
+                const getFieldName = () => {
+                  return eIndex.toString()+nIndex;
+                }
 
                 return(
                   <View key={nIndex} style={styles.fieldContainer}>
                     <Text style={styles.instructionText}>{node.label || 'Input'}:</Text>
                     <TextInput 
-                      //onFocus={() => setActiveField()}
-                      style={[styles.textInput, node.styling || null ]} 
+                      onFocus={() => setActiveField(getFieldName())}
+                      style={[styles.textInput, activeStyle(), node.styling || null ]} 
                       placeholder={node.placeholder || 'placeholder'}
-                      value={state[eIndex.toString()+nIndex][1]}
-                      onChangeText={ (text) => updateState(eIndex.toString()+nIndex, node.type, text, node.key)}
+                      value={state[getFieldName()][1]}
+                      onChangeText={ (text) => updateState(getFieldName(), node.type, text, node.key)}
                       maxLength={node.maxLength || null}
                       keyboardType={node.keyboardType || null}
                       secureTextEntry={node.secureTextEntry || null}
                     />
-                    { 
-                    //props.PasswordValidator ? props.PasswordValidator : null
-                      (node.validation ) ? <PasswordValidator password={state[eIndex.toString()+nIndex][1] || ''}/> : null
-                    }
+                    {getValidator()}
                     {checkMatch()}
                   </View>
                 );
@@ -154,20 +169,22 @@ const Form = ( props ) =>  {
   }
 
   return(
-    <View style={styles.formContainer}>
-      <Text style={[styles.title, props.titleCustomization.titleStyling || null]}>
-        {props.titleCustomization.titleText || 'Form'}
-      </Text>
-      {renderFields()}
-      <TouchableOpacity 
-        onPress={props.onSubmit ? props.onSubmit : onSubmitDefault} 
-        disabled={isNotReadyToSubmit()} 
-        style={[styles.submitButtom, props.buttonCustomization.buttonStyling || null]}>
-        <Text style={[styles.buttonText, props.buttonCustomization.buttonTextStyling || null]}>
-          {props.buttonCustomization.buttonText || 'Submit'}
+    <TouchableWithoutFeedback>
+      <View style={styles.formContainer}>
+        <Text style={[styles.title, props.titleCustomization.titleStyling || null]}>
+          {props.titleCustomization.titleText || 'Form'}
         </Text>
-      </TouchableOpacity>
-    </View>
+        {renderFields()}
+        <TouchableOpacity 
+          onPress={props.onSubmit ? props.onSubmit : onSubmitDefault} 
+          disabled={isNotReadyToSubmit()} 
+          style={[styles.submitButtom, props.buttonCustomization.buttonStyling || null]}>
+          <Text style={[styles.buttonText, props.buttonCustomization.buttonTextStyling || null]}>
+            {props.buttonCustomization.buttonText || 'Submit'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -240,6 +257,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
+    backgroundColor: 'white',
   },
   nomatchText: {
     alignSelf: 'flex-end',
