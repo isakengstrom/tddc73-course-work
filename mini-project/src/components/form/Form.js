@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import PasswordValidator from '../passwordValidator/PasswordValidator';
 import { defaultFieldProps, defaultForm } from './defaultForms';
+import defaultCustomizations from './defaultCustomizations';
 
 const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -75,8 +76,11 @@ const Form = ( props ) =>  {
     }));
   };
 
+  useEffect(() => {
+
+  });
   const deactivateFocus = () => {
-    setActiveField('');
+    setActiveField(null);
     Keyboard.dismiss();
   }
 
@@ -92,6 +96,7 @@ const Form = ( props ) =>  {
   }
 
   const isNotReadyToSubmit = () => {
+    console.log('entered');
   
     let disable = false;
     
@@ -116,9 +121,12 @@ const Form = ( props ) =>  {
     setState(initialFields);
   }; 
 
+  
+
   const renderFields = () => {
     //console.log(state);
     //console.log(confirmations);
+    console.log(defaultCustomizations);
     return(
       <View >
         {props.fields.map((edge, eIndex) => {
@@ -184,19 +192,26 @@ const Form = ( props ) =>  {
     );
   }
 
+  const checkCustomization = (customizationName, customization) => {
+    if(props[customizationName] && props[customizationName][customization]) 
+      return props[customizationName][customization];
+   
+    return defaultCustomizations[customizationName][customization];
+  }
+
   return(
-    <TouchableWithoutFeedback>
+    <TouchableWithoutFeedback onPress={() => deactivateFocus()}>
       <View style={styles.formContainer}>
-        <Text style={[styles.title, props.titleCustomization.titleStyling || null]}>
-          {props.titleCustomization.titleText || 'Form'}
+        <Text style={[styles.title, checkCustomization('titleCustomization', 'titleStyling')]}>
+          {checkCustomization('titleCustomization', 'titleText')}
         </Text>
         {renderFields()}
         <TouchableOpacity 
           onPress={props.onSubmit ? props.onSubmit : onSubmitDefault} 
           disabled={isNotReadyToSubmit()} 
-          style={[styles.submitButtom, props.buttonCustomization.buttonStyling || null]}>
-          <Text style={[styles.buttonText, props.buttonCustomization.buttonTextStyling || null]}>
-            {props.buttonCustomization.buttonText || 'Submit'}
+          style={[styles.submitButtom, checkCustomization('buttonCustomization', 'buttonStyling')]}>
+          <Text style={[styles.buttonText, checkCustomization('buttonCustomization', 'buttonTextStyling')]}>
+            {checkCustomization('buttonCustomization', 'buttonText')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -209,6 +224,7 @@ export default Form;
 // FORM PROP TYPES //
 Form.propTypes = {
   onSubmit: PropTypes.func,
+  onClose: PropTypes.func,
   fields: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
     type: PropTypes.oneOf([
       'text', 'email', 'password', 'confirmation',
@@ -237,6 +253,7 @@ Form.propTypes = {
 }
 Form.defaultProps = {
   fields: defaultForm,
+  //buttonCustomization: null,
 }
 
 // FORM STYLING //

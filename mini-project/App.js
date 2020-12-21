@@ -15,7 +15,7 @@ const App = () => {
           fields={customSignUpArray}
           titleCustomization={{
             titleText: 'Sign up',
-            titleStyling: {fontFamily: 'Avenir'},
+            titleStyling: {fontFamily: 'Avenir', fontWeight: '600'},
           }}
           buttonCustomization={{
             buttonText: 'SUBMIT', 
