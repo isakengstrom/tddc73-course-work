@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -15,29 +15,35 @@ Has more than 12 characters
 This would result in 6 levels of password strength depending on how many of the above 
 mentioned criteria are being met.*/
 
-const PasswordValidator = ( props ) => {
-  const specialCharsCheck = /[!@#$%^&*(),.?":{}|<>=/€¨'-_´`]/;
-  const numbCheck = /\d/;
-  const lowerCaseCheck = /[a-z]/;
-  const upperCaseCheck = /[A-Z]/;
-  let strength = 0;
+const specialCharsCheck = /[!@#$%^&*(),.?":{}|<>=/€¨'-_´`]/;
+const numbCheck = /\d/;
+const lowerCaseCheck = /[a-z]/;
+const upperCaseCheck = /[A-Z]/;
 
-  if(props.password.length > 8) {
-    strength++; 
-  }
-  if(props.password.length > 12) {
-    strength++; 
-  }
-  if(specialCharsCheck.test(props.password)) {
-    strength++; 
-  }
-  if(numbCheck.test(props.password)) {
-    strength++; 
-  }
-  if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
-    strength++; 
-  }
+const PasswordValidator = ( props ) => {
+  const [strength, setStrength] = useState(0); 
   
+  useEffect(() => {
+    let totalStrength = 0;
+    
+    if(props.password.length > 8) {
+      totalStrength++; 
+    }
+    if(props.password.length > 12) {
+      totalStrength++; 
+    }
+    if(specialCharsCheck.test(props.password)) {
+      totalStrength++; 
+    }
+    if(numbCheck.test(props.password)) {
+      totalStrength++; 
+    }
+    if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
+      totalStrength++; 
+    }
+
+    setStrength(totalStrength);
+  }, [props.password]);
 
   const status = () => {
     const arr = [0, 1, 2, 3, 4, 5];  
