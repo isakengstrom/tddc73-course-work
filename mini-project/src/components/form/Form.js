@@ -17,7 +17,7 @@ const Form = ( props ) =>  {
   const [activeField, setActiveField] = useState(null);
   const [switches, setSwitches] = useState(initialSwitches);
 
-  let fieldsInfo = { };
+  let fieldsInfo = {};
   let initialFields = {};
 
   const [field, setField] = useState(useMemo(() => {
@@ -27,7 +27,7 @@ const Form = ( props ) =>  {
           ...fieldsInfo,
           [eInd.toString()+nInd]: [
             node.type, 
-            node.key || null
+            node.key || null,
           ] 
         }
         initialFields = {
@@ -36,7 +36,7 @@ const Form = ( props ) =>  {
         }
       })
     });
-    //console.log(initialFields)
+    //console.log(fieldsInfo)
     return initialFields;
   })); 
 
@@ -78,16 +78,16 @@ const Form = ( props ) =>  {
   }); 
 
   useEffect(() => {
-    console.log('Component mounted..')
+    console.log('\nComponent mounting..')
     deactivateFocus();
     setField(initialFields)
     setSwitches(initialSwitches)
   }, []);
 
-  const updateSwitch = (name, value) => {
+  const updateSwitch = (switchName, value) => {
     setSwitches(prevState => ({
       ...prevState,
-      [name]: value
+      [switchName]: value
     }));
   };
 
@@ -124,7 +124,7 @@ const Form = ( props ) =>  {
       });
     });
     
-    Object.entries(fieldsInfo).map(([ fieldName ]) => {
+    Object.entries(fieldsInfo).map(([fieldName]) => {
       if(((fieldsInfo[fieldName][0] == 'email') && !emailCheck.test(field[fieldName])) || ((fieldsInfo[fieldName][0] == 'password') && (field[fieldName].length < 8)))
         enable = false;
     });
@@ -136,6 +136,7 @@ const Form = ( props ) =>  {
     if(isReadyToSubmit()) {
       Keyboard.dismiss();
       setField(initialFields);
+      updateSwitch('attemptedSubmit', false)
     }
     else {
       console.log(switches.attemptedSubmit)
@@ -181,7 +182,7 @@ const Form = ( props ) =>  {
                   
                   return(
                     <View>
-                      {node.type == 'confirmation' ? <Text style={styles.nomatchText}>{text}</Text> : null}
+                      {node.type == 'confirmation' ? <Text style={styles.noMatchText}>{text}</Text> : null}
                     </View>
                   );
                 }
@@ -198,13 +199,19 @@ const Form = ( props ) =>  {
                   if(props.fieldNumbering) return  fieldNumber+ '. ';
                   return '';
                 }
+
+                const isRequired = () => {
+                  if(switches.attemptedSubmit && node.isRequired) return true;
+                  return false;
+                }
+
                 fieldNumber++
                 return(
                   <View key={nIndex} style={styles.fieldContainer}>
-                    <Text style={styles.instructionText}>{getFieldNumber()}{node.label || 'Input'}:</Text>
+                    <Text style={styles.instructionText}>{getFieldNumber()}{node.label || 'Input'}{node.isRequired ? '*' : ''}</Text>
                     <TextInput 
                       onFocus={() => setActiveField(getFieldName())}
-                      style={[styles.textInput, activeStyle(), node.styling || null ]} 
+                      style={[styles.textInput, activeStyle(), isRequired() ? styles.requiredField : null, node.styling || null]} 
                       placeholder={node.placeholder || ''}
                       value={field[getFieldName()]}
                       onChangeText={ (text) => updateField(getFieldName(), text)}
@@ -318,7 +325,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: 'white',
   },
-  nomatchText: {
+  noMatchText: {
     alignSelf: 'flex-end',
     fontSize: 9,
     marginRight: 5,
@@ -347,4 +354,8 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 5,
   },
+  requiredField: {
+    borderColor: 'red', 
+    shadowColor: 'red'
+  }
 });

@@ -12,7 +12,7 @@ export const customSignUpArray = [
       type: 'text', 
       label: 'Last Name', 
       placeholder: 'Andersson',
-      isRequired: true,
+      isRequired: false,
     },
   ],
   [
