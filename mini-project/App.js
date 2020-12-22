@@ -13,6 +13,7 @@ const App = () => {
       <View style={styles.formContainer}>
         <Form 
           fields={customSignUpArray}
+          fieldNumbering={true}
           titleCustomization={{
             titleText: 'Sign up',
             titleStyling: {fontFamily: 'Avenir', fontWeight: '600'},

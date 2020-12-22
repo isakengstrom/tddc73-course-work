@@ -1,5 +1,5 @@
-export const defaultFieldProps = [
-  {
+export const defaultFieldProps = {
+  text: {
     type: 'text', 
     label: 'Input',
     placeholder: '',
@@ -9,7 +9,7 @@ export const defaultFieldProps = [
     secureTextEntry: false,
     validation: null,
   },
-  {
+  email: {
     type: 'email', 
     label: 'Email',
     placeholder: 'bob@mail.com',
@@ -19,17 +19,7 @@ export const defaultFieldProps = [
     secureTextEntry: false,
     validation: null,
   },  
-  {
-    type: 'emailConfirmation', 
-    label: 'Confirm Email',
-    placeholder: 'Enter again',
-    isRequired: true,
-    maxLength: null,
-    keyboardType: null,
-    secureTextEntry: false,
-    validation: null,
-  },  
-  {
+  password: {
     type: 'password', 
     label: 'Password',
     placeholder: '',
@@ -39,8 +29,8 @@ export const defaultFieldProps = [
     secureTextEntry: true,
     validation: true,
   },
-  {
-    type: 'passwordConfirmation', 
+  confirmation: {
+    type: 'confirmation', 
     label: 'Confirm Password',
     placeholder: '',
     isRequired: true,
@@ -50,7 +40,7 @@ export const defaultFieldProps = [
     validation: null,
   },
    
-];
+};
 
 export const defaultForm = [
   [

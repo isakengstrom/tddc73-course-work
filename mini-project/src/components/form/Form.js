@@ -22,7 +22,6 @@ const Form = ( props ) =>  {
       })
     });
     
-    //console.log(initialFields);
     return initialFields;
   })); 
 
@@ -76,34 +75,28 @@ const Form = ( props ) =>  {
     }));
   };
 
-  useEffect(() => {
-
-  });
   const deactivateFocus = () => {
     setActiveField(null);
     Keyboard.dismiss();
   }
 
   const isFieldMatch = (conf) => {
-    let match = true;
+    let fountMatch = true;
     
-    Object.entries(confirmations[conf].matches).map(entry => {
-      if(state[conf][1] != state[entry[1]][1]) 
-        match = false;
+    Object.entries(confirmations[conf].matches).map(match => {
+      if(state[conf][1] != state[match[1]][1]) 
+      fountMatch = false;
     });
     
-    return match;
+    return fountMatch;
   }
 
   const isNotReadyToSubmit = () => {
-    console.log('entered');
-  
     let disable = false;
     
     Object.entries(confirmations).map(conf => {
-      Object.entries(conf[1].matches).map(entry => {
-        //console.log(conf);
-        if(state[conf[0]][1] != state[entry[1]][1]) 
+      Object.entries(conf[1].matches).map(match => {
+        if(state[conf[0]][1] != state[match[1]][1]) 
           disable = true;
       });
     });
@@ -121,12 +114,15 @@ const Form = ( props ) =>  {
     setState(initialFields);
   }; 
 
-  
+  const getCustomization = (customizationName, customization) => {
+    if(props[customizationName] && props[customizationName][customization]) 
+      return props[customizationName][customization];
+   
+    return defaultCustomizations[customizationName][customization];
+  }
 
   const renderFields = () => {
-    //console.log(state);
-    //console.log(confirmations);
-    console.log(defaultCustomizations);
+    let fieldNumber = 0;
     return(
       <View >
         {props.fields.map((edge, eIndex) => {
@@ -135,12 +131,10 @@ const Form = ( props ) =>  {
               {edge.map((node, nIndex) =>  {
 
                 const getValidator = () => {
-                  //console.log(state[getFieldName()][1])
                   return((node.validation ) ? <PasswordValidator password={state[getFieldName()][1] || ''}/> : null);
                 }
 
                 const checkMatch = () => {
-                  
                   let text = null;
 
                   if(node.type == 'confirmation'){
@@ -167,13 +161,18 @@ const Form = ( props ) =>  {
                   return eIndex.toString()+nIndex;
                 }
 
+                const getFieldNumber = () => {
+                  if(props.fieldNumbering) return  fieldNumber+ '. ';
+                  return '';
+                }
+                fieldNumber++
                 return(
                   <View key={nIndex} style={styles.fieldContainer}>
-                    <Text style={styles.instructionText}>{node.label || 'Input'}:</Text>
+                    <Text style={styles.instructionText}>{getFieldNumber()}{node.label || 'Input'}:</Text>
                     <TextInput 
                       onFocus={() => setActiveField(getFieldName())}
                       style={[styles.textInput, activeStyle(), node.styling || null ]} 
-                      placeholder={node.placeholder || 'placeholder'}
+                      placeholder={node.placeholder || ''}
                       value={state[getFieldName()][1]}
                       onChangeText={ (text) => updateState(getFieldName(), node.type, text, node.key)}
                       maxLength={node.maxLength || null}
@@ -192,26 +191,19 @@ const Form = ( props ) =>  {
     );
   }
 
-  const checkCustomization = (customizationName, customization) => {
-    if(props[customizationName] && props[customizationName][customization]) 
-      return props[customizationName][customization];
-   
-    return defaultCustomizations[customizationName][customization];
-  }
-
   return(
     <TouchableWithoutFeedback onPress={() => deactivateFocus()}>
       <View style={styles.formContainer}>
-        <Text style={[styles.title, checkCustomization('titleCustomization', 'titleStyling')]}>
-          {checkCustomization('titleCustomization', 'titleText')}
+        <Text style={[styles.title, getCustomization('titleCustomization', 'titleStyling')]}>
+          {getCustomization('titleCustomization', 'titleText')}
         </Text>
         {renderFields()}
         <TouchableOpacity 
           onPress={props.onSubmit ? props.onSubmit : onSubmitDefault} 
           disabled={isNotReadyToSubmit()} 
-          style={[styles.submitButtom, checkCustomization('buttonCustomization', 'buttonStyling')]}>
-          <Text style={[styles.buttonText, checkCustomization('buttonCustomization', 'buttonTextStyling')]}>
-            {checkCustomization('buttonCustomization', 'buttonText')}
+          style={[styles.submitButtom, getCustomization('buttonCustomization', 'buttonStyling')]}>
+          <Text style={[styles.buttonText, getCustomization('buttonCustomization', 'buttonTextStyling')]}>
+            {getCustomization('buttonCustomization', 'buttonText')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -250,10 +242,11 @@ Form.propTypes = {
     buttonTextStyling: PropTypes.object,
   }),
   passwordValidator: PropTypes.element,
+  fieldNumbering: PropTypes.bool,
 }
 Form.defaultProps = {
   fields: defaultForm,
-  //buttonCustomization: null,
+  fieldNumbering: false,
 }
 
 // FORM STYLING //
