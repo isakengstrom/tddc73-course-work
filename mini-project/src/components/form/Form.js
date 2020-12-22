@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef} from 'react';
+import React, { useState, useMemo, useEffect} from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -8,27 +8,42 @@ import defaultCustomizations from './defaultCustomizations';
 
 const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
+const initialSwitches = {
+  attemptedSubmit: false,
+}
+
 const Form = ( props ) =>  {
 
-  let initialFields = { };
+  const [activeField, setActiveField] = useState(null);
+  const [switches, setSwitches] = useState(initialSwitches);
 
-  const [ state, setState ] = useState(useMemo(() => {
+  let fieldsInfo = { };
+  let initialFields = {};
+
+  const [field, setField] = useState(useMemo(() => {
     props.fields.map((edge, eInd) => {
       edge.map((node, nInd) => {
+        fieldsInfo = {
+          ...fieldsInfo,
+          [eInd.toString()+nInd]: [
+            node.type, 
+            node.key || null
+          ] 
+        }
         initialFields = {
           ...initialFields,
-          [eInd.toString()+nInd]: [node.type, '', node.key || null] 
+          [eInd.toString()+nInd]: ''
         }
       })
     });
-    
+    //console.log(initialFields)
     return initialFields;
   })); 
 
   const confirmations = useMemo(() => {
     let initialConfirmations = {};
     
-    Object.entries(initialFields).map(([ field, [type, text, inKey]]) => {
+    Object.entries(fieldsInfo).map(([ field, [type, inKey]]) => {
       if(type == 'confirmation'){
         initialConfirmations = {
           ...initialConfirmations,
@@ -44,7 +59,7 @@ const Form = ( props ) =>  {
 
     Object.entries(initialConfirmations).map(([ conf, values ]) => {
       matchingFields = [];
-      Object.entries(initialFields).map(([ field , [type, text, innerKey]]) => {        
+      Object.entries(fieldsInfo).map(([ field , [type, innerKey]]) => {        
         if(type != 'confirmation' && innerKey == values.key){
           matchingFields = matchingFields.concat(field);
           initialConfirmations = {
@@ -62,16 +77,24 @@ const Form = ( props ) =>  {
     return initialConfirmations;
   }); 
 
-  const [ activeField, setActiveField] = useState('');
+  useEffect(() => {
+    console.log('Component mounted..')
+    deactivateFocus();
+    setField(initialFields)
+    setSwitches(initialSwitches)
+  }, []);
 
-  const updateState = (stateName, type, text, key) => {
-    setState(prevState => ({
+  const updateSwitch = (name, value) => {
+    setSwitches(prevState => ({
       ...prevState,
-      [stateName]: [
-        type,
-        text, 
-        key,
-      ]
+      [name]: value
+    }));
+  };
+
+  const updateField = (fieldName, value) => {
+    setField(prevState => ({
+      ...prevState,
+      [fieldName]: value
     }));
   };
 
@@ -84,34 +107,40 @@ const Form = ( props ) =>  {
     let fountMatch = true;
     
     Object.entries(confirmations[conf].matches).map(match => {
-      if(state[conf][1] != state[match[1]][1]) 
+      if(field[conf] != field[match[1]]) 
       fountMatch = false;
     });
     
     return fountMatch;
   }
 
-  const isNotReadyToSubmit = () => {
-    let disable = false;
+  const isReadyToSubmit = () => {
+    let enable = true;
     
     Object.entries(confirmations).map(conf => {
       Object.entries(conf[1].matches).map(match => {
-        if(state[conf[0]][1] != state[match[1]][1]) 
-          disable = true;
+        if(field[conf[0]] != field[match[1]]) 
+          enable = false;
       });
     });
     
-    Object.entries(state).map(([ _ , [type, text, __ ]]) => {
-      if(((type == 'email') && !emailCheck.test(text)) || ((type == 'password') && (text.length < 8)))
-        disable = true;
+    Object.entries(fieldsInfo).map(([ fieldName ]) => {
+      if(((fieldsInfo[fieldName][0] == 'email') && !emailCheck.test(field[fieldName])) || ((fieldsInfo[fieldName][0] == 'password') && (field[fieldName].length < 8)))
+        enable = false;
     });
 
-    return disable;
+    return enable;
   };
 
   const onSubmitDefault = () => {
-    Keyboard.dismiss();
-    setState(initialFields);
+    if(isReadyToSubmit()) {
+      Keyboard.dismiss();
+      setField(initialFields);
+    }
+    else {
+      console.log(switches.attemptedSubmit)
+      updateSwitch('attemptedSubmit', true)
+    }
   }; 
 
   const getCustomization = (customizationName, customization) => {
@@ -122,6 +151,10 @@ const Form = ( props ) =>  {
   }
 
   const renderFields = () => {
+    //console.log('----Initial field----')
+    //console.log(fieldsInfo)
+    //console.log('----State-----')
+    //console.log(field)
     let fieldNumber = 0;
     return(
       <View >
@@ -131,14 +164,14 @@ const Form = ( props ) =>  {
               {edge.map((node, nIndex) =>  {
 
                 const getValidator = () => {
-                  return((node.validation ) ? <PasswordValidator password={state[getFieldName()][1] || ''}/> : null);
+                  return((node.validation ) ? <PasswordValidator password={field[getFieldName()] || ''}/> : null);
                 }
 
                 const checkMatch = () => {
                   let text = null;
 
                   if(node.type == 'confirmation'){
-                    if(state[getFieldName()][1] && !state[getFieldName()][1] == ''){
+                    if(field[getFieldName()] && !field[getFieldName()] == ''){
                       if(isFieldMatch(getFieldName()))
                         text = "It's a match!";
                       else 
@@ -173,8 +206,8 @@ const Form = ( props ) =>  {
                       onFocus={() => setActiveField(getFieldName())}
                       style={[styles.textInput, activeStyle(), node.styling || null ]} 
                       placeholder={node.placeholder || ''}
-                      value={state[getFieldName()][1]}
-                      onChangeText={ (text) => updateState(getFieldName(), node.type, text, node.key)}
+                      value={field[getFieldName()]}
+                      onChangeText={ (text) => updateField(getFieldName(), text)}
                       maxLength={node.maxLength || null}
                       keyboardType={node.keyboardType || null}
                       secureTextEntry={node.secureTextEntry || null}
@@ -200,7 +233,7 @@ const Form = ( props ) =>  {
         {renderFields()}
         <TouchableOpacity 
           onPress={props.onSubmit ? props.onSubmit : onSubmitDefault} 
-          disabled={isNotReadyToSubmit()} 
+          //disabled={isNotReadyToSubmit()} 
           style={[styles.submitButtom, getCustomization('buttonCustomization', 'buttonStyling')]}>
           <Text style={[styles.buttonText, getCustomization('buttonCustomization', 'buttonTextStyling')]}>
             {getCustomization('buttonCustomization', 'buttonText')}
