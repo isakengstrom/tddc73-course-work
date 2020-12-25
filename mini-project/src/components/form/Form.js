@@ -156,6 +156,7 @@ const Form = ( props ) =>  {
     //console.log(fieldsInfo)
     //console.log('----State-----')
     //console.log(field)
+    //console.log(confirmations);
     let fieldNumber = 0;
     return(
       <View >
@@ -196,12 +197,36 @@ const Form = ( props ) =>  {
                 }
 
                 const getFieldNumber = () => {
-                  if(props.fieldNumbering) return  fieldNumber+ '. ';
+                  if(props.fieldNumbering) return fieldNumber + '. ';
                   return '';
                 }
 
                 const isRequired = () => {
-                  if(switches.attemptedSubmit && node.isRequired) return true;
+                  if(switches.attemptedSubmit && node.isRequired) {
+                    if(node.type == 'email' && !emailCheck.test(field[getFieldName()]))
+                      return true;
+
+                    else if(node.type == 'password' && field[getFieldName()].length < 8)
+                      return true;
+                    
+                    else if(node.type == 'text' && field[getFieldName()] == '')
+                      return true;
+
+                    else if(node.type == 'confirmation'){
+                      let matching = false;
+                      Object.entries(confirmations[getFieldName()].matches).map(match => {
+                        if(node.caseSensitive == true){
+                          if(field[getFieldName()] != field[match[1]]) 
+                            matching = true;
+                        }
+                        else{
+                          if(field[getFieldName()].toLowerCase() != field[match[1]].toLowerCase()) 
+                            matching = true;
+                        }
+                      });
+                      return matching;
+                    }
+                  }
                   return false;
                 }
 
@@ -271,6 +296,7 @@ Form.propTypes = {
     validation: PropTypes.bool,
     styling: PropTypes.object,
     key: PropTypes.string,
+    caseSensitive: PropTypes.bool,
   }))),
   titleCustomization: PropTypes.shape({
     titleText: PropTypes.string,

@@ -30,6 +30,19 @@ export const customSignUpArray = [
       placeholder: 'bob@mail.com',
       isRequired: true,
       keyboardType: 'email-address',
+      key: 'emailconf'
+    },
+  ],
+  [
+    {
+      type: 'confirmation', 
+      label: 'Confirm Email', 
+      placeholder: 'reenter email',
+      isRequired: true,
+      keyboardType: 'email-address',
+      secureTextEntry: false,
+      caseSensitive: false,
+      key: 'emailconf'
     },
   ],
   [
@@ -47,6 +60,16 @@ export const customSignUpArray = [
     {
       type: 'confirmation', 
       label: 'Confirm Input', 
+      placeholder: 'password',
+      isRequired: true,
+      secureTextEntry: true,
+      key: 'conf1',
+    },
+  ],
+  [
+    {
+      type: 'confirmation', 
+      label: 'Confirm two', 
       placeholder: 'password',
       isRequired: true,
       secureTextEntry: true,
