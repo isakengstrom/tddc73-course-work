@@ -103,15 +103,18 @@ const Form = ( props ) =>  {
     Keyboard.dismiss();
   }
 
-  const isFieldMatch = (conf) => {
-    let fountMatch = true;
-    
+  const isFieldMatch = (conf, caseSensitive = true) => {
+    let isMatch = true;
+
     Object.entries(confirmations[conf].matches).map(match => {
-      if(field[conf] != field[match[1]]) 
-      fountMatch = false;
+      if(caseSensitive && (field[conf] != field[match[1]])) 
+          isMatch = false;
+      
+      else if(field[conf].toLowerCase() != field[match[1]].toLowerCase()) 
+          isMatch = false;
     });
     
-    return fountMatch;
+    return isMatch;
   }
 
   const isReadyToSubmit = () => {
@@ -139,7 +142,7 @@ const Form = ( props ) =>  {
       updateSwitch('attemptedSubmit', false)
     }
     else {
-      console.log(switches.attemptedSubmit)
+      //console.log(switches.attemptedSubmit)
       updateSwitch('attemptedSubmit', true)
     }
   }; 
@@ -164,28 +167,37 @@ const Form = ( props ) =>  {
           return(
             <View key={eIndex} style={styles.fieldsContainer}>
               {edge.map((node, nIndex) =>  {
+                
+                const getFieldFeedback = () => {
+                  if(node.type == 'confirmation')
+                    return getMatchFeedback();
+                  else if(node.type == 'password' && node.validation)
+                    return getValidator();
+                  else if(node.type == 'email' && switches.attemptedSubmit)
+                    return getEmailFeedback();
 
-                const getValidator = () => {
-                  return((node.validation ) ? <PasswordValidator password={field[getFieldName()] || ''}/> : null);
+                  return null;
                 }
 
-                const checkMatch = () => {
-                  let text = null;
+                const getValidator = () => {
+                  return <PasswordValidator password={field[getFieldName()] || ''}/>
+                }
 
-                  if(node.type == 'confirmation'){
-                    if(field[getFieldName()] && !field[getFieldName()] == ''){
-                      if(isFieldMatch(getFieldName()))
-                        text = "It's a match!";
-                      else 
-                        text = "Fields don't match :(";
-                    }
+                const getEmailFeedback = () => {
+                  return emailCheck.test(field[getFieldName()]) ? null : <Text style={styles.feedbackText}>{'Invalid email :('}</Text>
+                }
+
+                const getMatchFeedback = () => {
+                  let text = null;
+                  
+                  if(field[getFieldName()] && !field[getFieldName()] == ''){
+                    if(isFieldMatch(getFieldName(), node.caseSensitive))
+                      text = "It's a match!";
+                    else 
+                      text = "Fields don't match :(";
                   }
                   
-                  return(
-                    <View>
-                      {node.type == 'confirmation' ? <Text style={styles.noMatchText}>{text}</Text> : null}
-                    </View>
-                  );
+                  return <Text style={styles.feedbackText}>{text}</Text>
                 }
 
                 const activeStyle = () => {
@@ -213,6 +225,7 @@ const Form = ( props ) =>  {
                       return true;
 
                     else if(node.type == 'confirmation'){
+
                       let matching = false;
                       Object.entries(confirmations[getFieldName()].matches).map(match => {
                         if(node.caseSensitive == true){
@@ -244,8 +257,9 @@ const Form = ( props ) =>  {
                       keyboardType={node.keyboardType || null}
                       secureTextEntry={node.secureTextEntry || null}
                     />
-                    {getValidator()}
-                    {checkMatch()}
+                    <View>
+                      {getFieldFeedback()}
+                    </View>
                   </View>
                 );
               })}
@@ -351,7 +365,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: 'white',
   },
-  noMatchText: {
+  feedbackText: {
     alignSelf: 'flex-end',
     fontSize: 9,
     marginRight: 5,
