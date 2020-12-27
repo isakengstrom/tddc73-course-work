@@ -15,7 +15,10 @@ The course consist of **three labs** and a **mini project**:
 
 - **Lab2** - Complex layout and interaction using [React-Native](https://reactnative.dev/).
      - [Lab2 - Results](lab2/README.md)
-- **Lab3** - Communication with [GitHub](https://github.com/) using [GraphQL](https://graphql.org/)
+
+- **Lab3** - Communication with [GitHub's API](https://docs.github.com/en/free-pro-team@latest/graphql) using [GraphQL](https://graphql.org/), with [React-Native](https://reactnative.dev/) as framework. 
+     - [Lab3 - Results](lab3/README.md)
+
 - **Mini project** - Implementation of a mini SDK.
 
 <br>
