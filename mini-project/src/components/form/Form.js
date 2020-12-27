@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect} from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import PropTypes from 'prop-types';
 
+import styles from './Styles';
 import PasswordValidator from '../passwordValidator/PasswordValidator';
 import { defaultFieldProps, defaultForm } from './defaultForms';
 import defaultCustomizations from './defaultCustomizations';
@@ -19,15 +20,19 @@ const Form = ( props ) =>  {
 
   let fieldsInfo = {};
   let initialFields = {};
+  let requiredFieldExists = false;
 
   const [field, setField] = useState(useMemo(() => {
     props.fields.map((edge, eInd) => {
       edge.map((node, nInd) => {
+        if(node.isRequired)
+          requiredFieldExists = true;
         fieldsInfo = {
           ...fieldsInfo,
           [eInd.toString()+nInd]: [
             node.type, 
             node.key || null,
+            node.isRequired || null,
           ] 
         }
         initialFields = {
@@ -121,15 +126,21 @@ const Form = ( props ) =>  {
     let enable = true;
     
     Object.entries(confirmations).map(conf => {
-      Object.entries(conf[1].matches).map(match => {
-        if(field[conf[0]] != field[match[1]]) 
-          enable = false;
-      });
+      if(fieldsInfo[conf[0]][2]){
+        Object.entries(conf[1].matches).map(match => {
+          if(field[conf[0]] != field[match[1]]) 
+            enable = false;
+        });
+      }
     });
     
     Object.entries(fieldsInfo).map(([fieldName]) => {
-      if(((fieldsInfo[fieldName][0] == 'email') && !emailCheck.test(field[fieldName])) || ((fieldsInfo[fieldName][0] == 'password') && (field[fieldName].length < 8)))
-        enable = false;
+      if(fieldsInfo[fieldName][2]){
+        if(fieldsInfo[fieldName][0] == 'email' && !emailCheck.test(field[fieldName])) 
+          enable = false;
+        if((fieldsInfo[fieldName][0] == 'password') && (field[fieldName].length < 8))
+          enable = false;
+      }
     });
 
     return enable;
@@ -139,11 +150,10 @@ const Form = ( props ) =>  {
     if(isReadyToSubmit()) {
       Keyboard.dismiss();
       setField(initialFields);
-      updateSwitch('attemptedSubmit', false)
+      updateSwitch('attemptedSubmit', false);
     }
     else {
-      //console.log(switches.attemptedSubmit)
-      updateSwitch('attemptedSubmit', true)
+      updateSwitch('attemptedSubmit', true);
     }
   }; 
 
@@ -155,11 +165,6 @@ const Form = ( props ) =>  {
   }
 
   const renderFields = () => {
-    //console.log('----Initial field----')
-    //console.log(fieldsInfo)
-    //console.log('----State-----')
-    //console.log(field)
-    //console.log(confirmations);
     let fieldNumber = 0;
     return(
       <View >
@@ -169,13 +174,15 @@ const Form = ( props ) =>  {
               {edge.map((node, nIndex) =>  {
                 
                 const getFieldFeedback = () => {
+
                   if(node.type == 'confirmation')
                     return getMatchFeedback();
                   else if(node.type == 'password' && node.validation)
                     return getValidator();
                   else if(node.type == 'email' && switches.attemptedSubmit)
                     return getEmailFeedback();
-
+                  else if(node.type == 'text' && node.isRequired && switches.attemptedSubmit)
+                    return getTextFeedback();
                   return null;
                 }
 
@@ -184,7 +191,28 @@ const Form = ( props ) =>  {
                 }
 
                 const getEmailFeedback = () => {
-                  return emailCheck.test(field[getFieldName()]) ? null : <Text style={styles.feedbackText}>{'Invalid email :('}</Text>
+                  let text = null;
+
+                  if(field[getFieldName()] == '')
+                    if(node.isRequired)
+                      text = 'Enter a valid email';
+                    else
+                      return null;
+                  else if(!emailCheck.test(field[getFieldName()]))
+                    text = 'Invalid email :(';
+                  else 
+                    text = 'Email is valid!';
+
+                  return <Text style={styles.feedbackText}>{text}</Text>
+                }
+
+                const getTextFeedback = () => {
+                  let text = null;
+
+                  if(field[getFieldName()] == '')
+                    text = 'This field is required';
+
+                  return <Text style={styles.feedbackText}>{text}</Text>
                 }
 
                 const getMatchFeedback = () => {
@@ -196,6 +224,8 @@ const Form = ( props ) =>  {
                     else 
                       text = "Fields don't match :(";
                   }
+                  else if (switches.attemptedSubmit && field[getFieldName()] == '')
+                    text = "Fields don't match :(";
                   
                   return <Text style={styles.feedbackText}>{text}</Text>
                 }
@@ -228,6 +258,8 @@ const Form = ( props ) =>  {
 
                       let matching = false;
                       Object.entries(confirmations[getFieldName()].matches).map(match => {
+                        if(field[getFieldName()] == '')
+                          matching = true;
                         if(node.caseSensitive == true){
                           if(field[getFieldName()] != field[match[1]]) 
                             matching = true;
@@ -277,10 +309,10 @@ const Form = ( props ) =>  {
           {getCustomization('titleCustomization', 'titleText')}
         </Text>
         {renderFields()}
+        <Text style={{alignSelf: 'center'}}>{requiredFieldExists ? '* Required' : null}</Text>
         <TouchableOpacity 
           onPress={props.onSubmit ? props.onSubmit : onSubmitDefault} 
-          //disabled={isNotReadyToSubmit()} 
-          style={[styles.submitButtom, getCustomization('buttonCustomization', 'buttonStyling')]}>
+          style={[styles.submitButtom, getCustomization('buttonCustomization', 'buttonStyling'), isReadyToSubmit() ? null : styles.notReadyToSubmit]}>
           <Text style={[styles.buttonText, getCustomization('buttonCustomization', 'buttonTextStyling')]}>
             {getCustomization('buttonCustomization', 'buttonText')}
           </Text>
@@ -328,74 +360,3 @@ Form.defaultProps = {
   fields: defaultForm,
   fieldNumbering: false,
 }
-
-// FORM STYLING //
-const styles = StyleSheet.create({
-  formContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
-    margin: 5,
-  },
-  fieldsContainer: {
-    flexDirection: 'row', 
-    alignItems: 'stretch',
-  },
-  fieldContainer: {
-    flex: 1, 
-    alignItems: 'stretch',
-  },
-  title: {
-    margin: 5,
-    fontSize: 25,
-  },
-  instructionText: {
-    paddingLeft: 3,
-    marginLeft: 5,
-    marginTop: 7,
-    fontSize: 11,
-    color: 'gray',
-  },
-  textInput: {
-    height: 30,
-    padding: 3,
-    margin: 5,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    backgroundColor: 'white',
-  },
-  feedbackText: {
-    alignSelf: 'flex-end',
-    fontSize: 9,
-    marginRight: 5,
-    color: 'gray'
-  },
-  submitButtom: {
-    height: 40,
-    width: 140,
-    padding: 5,
-    margin: 10,
-    marginTop: 20,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'gray',
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-  },
-  activeField: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0.5, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  requiredField: {
-    borderColor: 'red', 
-    shadowColor: 'red'
-  }
-});

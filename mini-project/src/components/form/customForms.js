@@ -28,7 +28,7 @@ export const customSignUpArray = [
       type: 'email', 
       label: 'Email', 
       placeholder: 'bob@mail.com',
-      isRequired: true,
+      isRequired: false,
       keyboardType: 'email-address',
       key: 'emailconf'
     },
@@ -49,7 +49,7 @@ export const customSignUpArray = [
       type: 'confirmation', 
       label: 'Confirm Password', 
       placeholder: 'password',
-      isRequired: true,
+      isRequired: false,
       secureTextEntry: true,
       caseSensitive: true,
       key: 'conf1',
