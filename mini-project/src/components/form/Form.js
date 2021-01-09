@@ -38,11 +38,11 @@ const Form = ( props ) =>  {
         // Add the fields to the fieldsInfo object
         fieldsInfo = {
           ...fieldsInfo,
-          [eInd.toString()+nInd]: [
-            node.type, 
-            node.key || defaultFieldProps[node.type].key,
-            node.isRequired || defaultFieldProps[node.type].isRequired,
-          ] 
+          [eInd.toString()+nInd]: {
+            type: node.type, 
+            key: node.key || defaultFieldProps[node.type].key,
+            isRequired: node.isRequired || defaultFieldProps[node.type].isRequired,
+          } 
         }
 
         // Add the initial values to the initialFields object
@@ -53,6 +53,7 @@ const Form = ( props ) =>  {
       })
     });
 
+    //console.log(fieldsInfo);
     return initialFields;
   })); 
 
@@ -60,25 +61,26 @@ const Form = ( props ) =>  {
   const confirmations = useMemo(() => {
     let initialConfirmations = {};
     
-    Object.entries(fieldsInfo).map(([ fieldName, [ type, inKey ] ]) => {
-      if(type == 'confirmation'){
+    Object.keys(fieldsInfo).map((curr) => {
+      console.log(fieldsInfo[curr].key);
+      if(fieldsInfo[curr].type == 'confirmation'){
         initialConfirmations = {
           ...initialConfirmations,
-          [fieldName]: {
-            key: inKey,
+          [curr]: {
+            key: fieldsInfo[curr].key,
             matches: []   
           }
         }
       }
     });
-
+    //console.log(initialConfirmations);
     let matchingFields = [];
 
     Object.entries(initialConfirmations).map(([ conf, values ]) => {
       matchingFields = [];
-      Object.entries(fieldsInfo).map(([ field , [type, innerKey]]) => {        
-        if(type != 'confirmation' && innerKey == values.key){
-          matchingFields = matchingFields.concat(field);
+      Object.keys(fieldsInfo).map((curr) => {        
+        if(fieldsInfo[curr].type != 'confirmation' && fieldsInfo[curr].key == values.key){
+          matchingFields = matchingFields.concat(curr);
           initialConfirmations = {
             ...initialConfirmations,
             [conf]: {
@@ -90,7 +92,7 @@ const Form = ( props ) =>  {
         }
       });
     });
-
+    //console.log(initialConfirmations);
     return initialConfirmations;
   }); 
 
@@ -144,7 +146,7 @@ const Form = ( props ) =>  {
     let enable = true;
     
     Object.entries(confirmations).map(conf => {
-      if(fieldsInfo[conf[0]][2]){
+      if(fieldsInfo[conf[0]].isRequired){
         Object.entries(conf[1].matches).map(match => {
           if(field[conf[0]] != field[match[1]]) 
             enable = false;
@@ -152,11 +154,11 @@ const Form = ( props ) =>  {
       }
     });
     
-    Object.entries(fieldsInfo).map(([fieldName]) => {
-      if(fieldsInfo[fieldName][2]){
-        if(fieldsInfo[fieldName][0] == 'email' && !emailCheck.test(field[fieldName])) 
+    Object.keys(fieldsInfo).map((fieldName) => {
+      if(fieldsInfo[fieldName].isRequired){
+        if(fieldsInfo[fieldName].type == 'email' && !emailCheck.test(field[fieldName])) 
           enable = false;
-        if((fieldsInfo[fieldName][0] == 'password') && (field[fieldName].length < 8))
+        if((fieldsInfo[fieldName].type == 'password') && (field[fieldName].length < 8))
           enable = false;
       }
     });
@@ -202,7 +204,7 @@ const Form = ( props ) =>  {
                     return getValidator();
                   else if(node.type == 'email' && switches.attemptedSubmit)
                     return getEmailFeedback();
-                  else if(node.type == 'text' && fieldsInfo[getFieldName()][2] && switches.attemptedSubmit)
+                  else if(node.type == 'text' && fieldsInfo[getFieldName()].isRequired && switches.attemptedSubmit)
                     return getTextFeedback();
                   return null;
                 }
@@ -217,7 +219,7 @@ const Form = ( props ) =>  {
                   let text = null;
 
                   if(field[getFieldName()] == '')
-                    if(fieldsInfo[getFieldName()][2])
+                    if(fieldsInfo[getFieldName()].isRequired)
                       text = 'Enter a valid email';
                     else
                       return null;
@@ -267,13 +269,13 @@ const Form = ( props ) =>  {
 
                 // Get the field number if the fieldNumbering prop is true
                 const getFieldNumber = () => {
-                  if(props.fieldNumbering) return fieldNumber + '. ';
-                  return '';
+                  if(props.fieldNumbering) 
+                    return fieldNumber + '. ';
                 }
 
                 // Check if the field is required and if a submit has been attempted
                 const isRequired = () => {
-                  if(switches.attemptedSubmit && fieldsInfo[getFieldName()][2]) {
+                  if(switches.attemptedSubmit && fieldsInfo[getFieldName()].isRequired) {
                     if(node.type == 'email' && !emailCheck.test(field[getFieldName()]))
                       return true;
 
@@ -309,7 +311,7 @@ const Form = ( props ) =>  {
                 // Main part of the field rendering
                 return(
                   <View key={nIndex} style={styles.fieldContainer}>
-                    <Text style={styles.instructionText}>{getFieldNumber()}{node.label || defaultFieldProps[node.type].label}{fieldsInfo[getFieldName()][2] ? '*' : ''}</Text>
+                    <Text style={styles.instructionText}>{getFieldNumber()}{node.label || defaultFieldProps[node.type].label}{fieldsInfo[getFieldName()].isRequired ? '*' : ''}</Text>
                     <TextInput 
                       onFocus={() => setActiveField(getFieldName())}
                       style={[styles.textInput, activeStyle(), isRequired() ? styles.requiredField : null, node.styling || null]} 
