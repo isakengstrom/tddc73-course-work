@@ -32,7 +32,7 @@ const Form = ( props ) =>  {
       // Map over the nested objects in the each nested array. The objects in each nested array is placed on the same row
       edge.map((node, nInd) => {
         
-        if(node.isRequired)
+        if(node.isRequired || defaultFieldProps[node.type].isRequired)
           requiredFieldExists = true;
 
         // Add the fields to the fieldsInfo object
@@ -40,15 +40,15 @@ const Form = ( props ) =>  {
           ...fieldsInfo,
           [eInd.toString()+nInd]: [
             node.type, 
-            node.key || null,
-            node.isRequired || null,
+            node.key || defaultFieldProps[node.type].key,
+            node.isRequired || defaultFieldProps[node.type].isRequired,
           ] 
         }
 
         // Add the initial values to the initialFields object
         initialFields = {
           ...initialFields,
-          [eInd.toString()+nInd]: ''
+          [eInd.toString()+nInd]: defaultFieldProps[node.type].value || '',
         }
       })
     });
@@ -60,11 +60,11 @@ const Form = ( props ) =>  {
   const confirmations = useMemo(() => {
     let initialConfirmations = {};
     
-    Object.entries(fieldsInfo).map(([ field, [type, inKey]]) => {
+    Object.entries(fieldsInfo).map(([ fieldName, [ type, inKey ] ]) => {
       if(type == 'confirmation'){
         initialConfirmations = {
           ...initialConfirmations,
-          [field]: {
+          [fieldName]: {
             key: inKey,
             matches: []   
           }
@@ -202,7 +202,7 @@ const Form = ( props ) =>  {
                     return getValidator();
                   else if(node.type == 'email' && switches.attemptedSubmit)
                     return getEmailFeedback();
-                  else if(node.type == 'text' && node.isRequired && switches.attemptedSubmit)
+                  else if(node.type == 'text' && fieldsInfo[getFieldName()][2] && switches.attemptedSubmit)
                     return getTextFeedback();
                   return null;
                 }
@@ -217,7 +217,7 @@ const Form = ( props ) =>  {
                   let text = null;
 
                   if(field[getFieldName()] == '')
-                    if(node.isRequired)
+                    if(fieldsInfo[getFieldName()][2])
                       text = 'Enter a valid email';
                     else
                       return null;
@@ -234,7 +234,7 @@ const Form = ( props ) =>  {
                   let text = null;
 
                   if(field[getFieldName()] == '')
-                    text = 'This field is required';
+                    text = 'Field is required';
 
                   return <Text style={styles.feedbackText}>{text}</Text>
                 }
@@ -273,7 +273,7 @@ const Form = ( props ) =>  {
 
                 // Check if the field is required and if a submit has been attempted
                 const isRequired = () => {
-                  if(switches.attemptedSubmit && node.isRequired) {
+                  if(switches.attemptedSubmit && fieldsInfo[getFieldName()][2]) {
                     if(node.type == 'email' && !emailCheck.test(field[getFieldName()]))
                       return true;
 
@@ -309,16 +309,16 @@ const Form = ( props ) =>  {
                 // Main part of the field rendering
                 return(
                   <View key={nIndex} style={styles.fieldContainer}>
-                    <Text style={styles.instructionText}>{getFieldNumber()}{node.label || 'Input'}{node.isRequired ? '*' : ''}</Text>
+                    <Text style={styles.instructionText}>{getFieldNumber()}{node.label || defaultFieldProps[node.type].label}{fieldsInfo[getFieldName()][2] ? '*' : ''}</Text>
                     <TextInput 
                       onFocus={() => setActiveField(getFieldName())}
                       style={[styles.textInput, activeStyle(), isRequired() ? styles.requiredField : null, node.styling || null]} 
-                      placeholder={node.placeholder || ''}
+                      placeholder={node.placeholder || defaultFieldProps[node.type].placeholder}
                       value={field[getFieldName()]}
                       onChangeText={ (text) => updateField(getFieldName(), text)}
-                      maxLength={node.maxLength || null}
-                      keyboardType={node.keyboardType || null}
-                      secureTextEntry={node.secureTextEntry || null}
+                      maxLength={node.maxLength || defaultFieldProps[node.type].maxLength}
+                      keyboardType={node.keyboardType || defaultFieldProps[node.type].keyboardType}
+                      secureTextEntry={node.secureTextEntry || defaultFieldProps[node.type].secureTextEntry}
                     />
                     <View>
                       {getFieldFeedback()}

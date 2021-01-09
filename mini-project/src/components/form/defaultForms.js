@@ -8,6 +8,7 @@ export const defaultFieldProps = {
     keyboardType: null,
     secureTextEntry: false,
     validation: null,
+    value: null,
   },
   email: {
     type: 'email', 
@@ -18,6 +19,7 @@ export const defaultFieldProps = {
     keyboardType: null,
     secureTextEntry: false,
     validation: null,
+    key: 'email',
   },  
   password: {
     type: 'password', 
@@ -28,6 +30,7 @@ export const defaultFieldProps = {
     keyboardType: null,
     secureTextEntry: true,
     validation: true,
+    key: 'password',
   },
   confirmation: {
     type: 'confirmation', 
@@ -38,6 +41,7 @@ export const defaultFieldProps = {
     keyboardType: null,
     secureTextEntry: true,
     validation: null,
+    key: 'password',
   },
    
 };
