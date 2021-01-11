@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View} from 'react-native';
 
 import Form from './src/components/form/Form';
-import {customSignUpArray} from './src/components/form/customForms';
+import {customSignUpArray} from './src/components/customForms';
 
 const App = () => {
   return (
