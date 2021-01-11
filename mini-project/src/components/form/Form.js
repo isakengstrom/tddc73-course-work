@@ -7,62 +7,63 @@ import PasswordValidator from '../passwordValidator/PasswordValidator';
 import { defaultFieldProps, defaultForm } from './defaultForms';
 import defaultCustomizations from './defaultCustomizations';
 
-// Const used to check if an email field contains an email adress
+// Check for email adress in correct format
 const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-// Initial switches
+// Initial switches for submit button
 const initialSwitches = {
   attemptedSubmit: false,
 }
 
 const Form = ( props ) =>  {
+
   // State managing which field is currently active 
   const [activeField, setActiveField] = useState(null);
+
   // State managing switches, example: If the user tried submitting
   const [switches, setSwitches] = useState(initialSwitches);
 
-  let fieldsInfo = {}; // Additional info/settings for the fields: field type, key and isRequired
-  let initialFields = {}; // An object with the initial field values
-  let requiredFieldExists = false;
+  let fieldsInfo = {}; 
+  let initialFields = {}; 
+  let requiredFieldExists = false; 
 
   // State managing the text in all the fields
   const [field, setField] = useState(useMemo(() => {
-    // Map over the nested arrays in the array of fields. Each element is a row in the form 
+    
+    // Map over the nested arrays in the props fields array
     props.fields.map((edge, eInd) => {
-      // Map over the nested objects in the each nested array. The objects in each nested array is placed on the same row
       edge.map((node, nInd) => {
-        
+
         if(node.isRequired || defaultFieldProps[node.type].isRequired)
           requiredFieldExists = true;
 
-        // Add the fields to the fieldsInfo object
+        // fieldsInfo keeps track of unchanging information for the text fields
         fieldsInfo = {
           ...fieldsInfo,
-          [eInd.toString()+nInd]: {
+          [node.type + eInd + nInd]: {
             type: node.type, 
             key: node.key || defaultFieldProps[node.type].key,
             isRequired: node.isRequired || defaultFieldProps[node.type].isRequired,
+            caseSensitive: node.caseSensitive || defaultFieldProps[node.type].caseSensitive,
           } 
         }
 
-        // Add the initial values to the initialFields object
+        // initialFields sets states and their values to ''
         initialFields = {
           ...initialFields,
-          [eInd.toString()+nInd]: defaultFieldProps[node.type].value || '',
+          [node.type + eInd + nInd]: '',
         }
       })
     });
-
-    //console.log(fieldsInfo);
     return initialFields;
   })); 
 
-  // Create an object to store the confirmation fields and their connected field(s) through the key prop.
+  // Create an object to store the confirmation fields and their connected field(s) through the key prop
   const confirmations = useMemo(() => {
     let initialConfirmations = {};
     
+    // Create object with connected fields
     Object.keys(fieldsInfo).map((curr) => {
-      console.log(fieldsInfo[curr].key);
       if(fieldsInfo[curr].type == 'confirmation'){
         initialConfirmations = {
           ...initialConfirmations,
@@ -73,9 +74,9 @@ const Form = ( props ) =>  {
         }
       }
     });
-    //console.log(initialConfirmations);
     let matchingFields = [];
 
+    // Gather matches according to keys
     Object.entries(initialConfirmations).map(([ conf, values ]) => {
       matchingFields = [];
       Object.keys(fieldsInfo).map((curr) => {        
@@ -96,9 +97,9 @@ const Form = ( props ) =>  {
     return initialConfirmations;
   }); 
 
-  // Mounting function, makes sure that unwanted cache is restored  
+  // Mounting function, makes sure that unwanted cache is restored, used on reload
   useEffect(() => {
-    //console.log('\nComponent mounting..')
+    // console.log('\nComponent mounting..')
     deactivateFocus();
     setField(initialFields)
     setSwitches(initialSwitches)
@@ -147,10 +148,7 @@ const Form = ( props ) =>  {
     
     Object.entries(confirmations).map(conf => {
       if(fieldsInfo[conf[0]].isRequired){
-        Object.entries(conf[1].matches).map(match => {
-          if(field[conf[0]] != field[match[1]]) 
-            enable = false;
-        });
+        enable = isFieldMatch(conf[0], conf[0].caseSensitive);
       }
     });
     
@@ -162,12 +160,10 @@ const Form = ( props ) =>  {
           enable = false;
       }
     });
-
     return enable;
   };
 
-  // Handle default submit
-  const onSubmitDefault = () => {
+  const onSubmit = () => {
     if(isReadyToSubmit()) {
       Keyboard.dismiss();
       setField(initialFields);
@@ -196,49 +192,34 @@ const Form = ( props ) =>  {
             <View key={eIndex} style={styles.fieldsContainer}>
               {edge.map((node, nIndex) =>  {
                 
+                // Get the name of the field
+                const getFieldName = () => {
+                  return node.type + eIndex + nIndex;
+                }
+
                 // Get feedback for the user
                 const getFieldFeedback = () => {
                   if(node.type == 'confirmation')
                     return getMatchFeedback();
+
                   else if(node.type == 'password' && node.validation)
-                    return getValidator();
+                    return <PasswordValidator password={field[getFieldName()] || ''}/>
+
                   else if(node.type == 'email' && switches.attemptedSubmit)
-                    return getEmailFeedback();
+                    return (
+                      <Text style={styles.feedbackText}> 
+                        {!emailCheck.test(field[getFieldName()]) ? 'Invalid email :(' : 'Email is valid!'}
+                      </Text>
+                    );
+
                   else if(node.type == 'text' && fieldsInfo[getFieldName()].isRequired && switches.attemptedSubmit)
-                    return getTextFeedback();
+                    return ( 
+                      <Text style={styles.feedbackText}>
+                        {(field[getFieldName()] == '') ? 'Field is required' : null }
+                      </Text>
+                    );
+
                   return null;
-                }
-
-                // Get the PasswordValidator Component
-                const getValidator = () => {
-                  return <PasswordValidator password={field[getFieldName()] || ''}/>
-                }
-
-                // Get feedback for the email fields
-                const getEmailFeedback = () => {
-                  let text = null;
-
-                  if(field[getFieldName()] == '')
-                    if(fieldsInfo[getFieldName()].isRequired)
-                      text = 'Enter a valid email';
-                    else
-                      return null;
-                  else if(!emailCheck.test(field[getFieldName()]))
-                    text = 'Invalid email :(';
-                  else 
-                    text = 'Email is valid!';
-
-                  return <Text style={styles.feedbackText}>{text}</Text>
-                }
-
-                // Get feedback for the text fields
-                const getTextFeedback = () => {
-                  let text = null;
-
-                  if(field[getFieldName()] == '')
-                    text = 'Field is required';
-
-                  return <Text style={styles.feedbackText}>{text}</Text>
                 }
 
                 // Get feedback for the confirmation fields
@@ -262,11 +243,6 @@ const Form = ( props ) =>  {
                   return activeField == getFieldName() ? styles.activeField : null;
                 }
 
-                // Get the name of the field
-                const getFieldName = () => {
-                  return eIndex.toString()+nIndex;
-                }
-
                 // Get the field number if the fieldNumbering prop is true
                 const getFieldNumber = () => {
                   if(props.fieldNumbering) 
@@ -274,20 +250,19 @@ const Form = ( props ) =>  {
                 }
 
                 // Check if the field is required and if a submit has been attempted
+                // This is to get red borders
                 const isRequired = () => {
                   if(switches.attemptedSubmit && fieldsInfo[getFieldName()].isRequired) {
+
                     if(node.type == 'email' && !emailCheck.test(field[getFieldName()]))
                       return true;
-
                     else if(node.type == 'password' && field[getFieldName()].length < 8)
                       return true;
-                    
                     else if(node.type == 'text' && field[getFieldName()] == '')
                       return true;
-
                     else if(node.type == 'confirmation'){
-
                       let matching = false;
+                      
                       Object.entries(confirmations[getFieldName()].matches).map(match => {
                         if(field[getFieldName()] == '')
                           matching = true;
@@ -305,13 +280,16 @@ const Form = ( props ) =>  {
                   }
                   return false;
                 }
-
+                
                 fieldNumber++
 
                 // Main part of the field rendering
                 return(
                   <View key={nIndex} style={styles.fieldContainer}>
-                    <Text style={styles.instructionText}>{getFieldNumber()}{node.label || defaultFieldProps[node.type].label}{fieldsInfo[getFieldName()].isRequired ? '*' : ''}</Text>
+                    <Text style={styles.instructionText}>
+                      {getFieldNumber()}{node.label || defaultFieldProps[node.type].label}
+                      {fieldsInfo[getFieldName()].isRequired ? '*' : ''}
+                    </Text>
                     <TextInput 
                       onFocus={() => setActiveField(getFieldName())}
                       style={[styles.textInput, activeStyle(), isRequired() ? styles.requiredField : null, node.styling || null]} 
@@ -344,7 +322,7 @@ const Form = ( props ) =>  {
         {renderFields()}
         <Text style={{alignSelf: 'center'}}>{requiredFieldExists ? '* Required' : null}</Text>
         <TouchableOpacity 
-          onPress={props.onSubmit ? props.onSubmit : onSubmitDefault} 
+          onPress={props.onSubmit ? props.onSubmit : onSubmit} 
           style={[styles.submitButtom, getCustomization('buttonCustomization', 'buttonStyling'), isReadyToSubmit() ? null : styles.notReadyToSubmit]}>
           <Text style={[styles.buttonText, getCustomization('buttonCustomization', 'buttonTextStyling')]}>
             {getCustomization('buttonCustomization', 'buttonText')}
@@ -357,7 +335,7 @@ const Form = ( props ) =>  {
 
 export default Form;
 
-// FORM PROP TYPES //
+// Possible and required propTypes for the Form
 Form.propTypes = {
   onSubmit: PropTypes.func,
   onClose: PropTypes.func,
@@ -366,7 +344,7 @@ Form.propTypes = {
       'text', 'email', 'password', 'confirmation',
     ]).isRequired,
     value: PropTypes.string,
-    label: PropTypes.string, 
+    label: PropTypes.string.isRequired, 
     isRequired: PropTypes.bool,
     placeholder: PropTypes.string,
     maxLength: PropTypes.number,

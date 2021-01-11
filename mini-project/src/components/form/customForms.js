@@ -30,7 +30,6 @@ export const customSignUpArray = [
       placeholder: 'bob@mail.com',
       isRequired: true,
       keyboardType: 'email-address',
-      key: 'emailconf'
     },
   ],
   [

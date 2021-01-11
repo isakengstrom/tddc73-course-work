@@ -15,36 +15,29 @@ Has more than 12 characters
 This would result in 6 levels of password strength depending on how many of the above 
 mentioned criteria are being met.*/
 
-const specialCharsCheck = /[!@#$%^&*(),.?":{}|<>=/€¨'-_´`]/;
-const numbCheck = /\d/;
-const lowerCaseCheck = /[a-z]/;
-const upperCaseCheck = /[A-Z]/;
-
 const PasswordValidator = ( props ) => {
-  const [strength, setStrength] = useState(0); 
-  
-  useEffect(() => {
-    let totalStrength = 0;
-    
+  const specialCharsCheck = /[!@#$%^&*(),.?":{}|<>=/€¨'-_´`]/;
+  const numbCheck = /\d/;
+  const lowerCaseCheck = /[a-z]/;
+  const upperCaseCheck = /[A-Z]/;
+  let strength = 0;
+
     if(props.password.length > 8) {
-      totalStrength++; 
+      strength++; 
     }
     if(props.password.length > 12) {
-      totalStrength++; 
+      strength++; 
     }
     if(specialCharsCheck.test(props.password)) {
-      totalStrength++; 
+      strength++; 
     }
     if(numbCheck.test(props.password)) {
-      totalStrength++; 
+      strength++; 
     }
     if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
-      totalStrength++; 
+      strength++; 
     }
-
-    setStrength(totalStrength);
-  }, [props.password]);
-
+  
   const status = () => {
     const arr = [0, 1, 2, 3, 4, 5];  
     const colors = ['#d9543f', '#d9543f', '#f0ad4e', '#f0ad4e', '#5cb85c', '#5cb85c']    
