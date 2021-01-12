@@ -6,7 +6,7 @@ export default defaultCustomizations = {
   },
   buttonCustomization: {
     buttonText: 'Button', 
-    buttonStyling: {backgroundColor: 'rgb(250, 100, 20)'}, 
-    buttonTextStyling: {fontWeight: '400'},
+    buttonStyling: {backgroundColor: 'rgb(0, 100, 20)'}, 
+    buttonTextStyling: {fontWeight: '800'},
   }
 }

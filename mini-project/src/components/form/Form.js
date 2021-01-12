@@ -135,7 +135,7 @@ const Form = ( props ) =>  {
       if(caseSensitive && (field[conf] != field[match[1]])) 
           isMatch = false;
       
-      else if(field[conf].toLowerCase() != field[match[1]].toLowerCase()) 
+      else if(field[conf] && (field[conf].toLowerCase() != field[match[1]].toLowerCase())) 
           isMatch = false;
     });
     
@@ -156,7 +156,7 @@ const Form = ( props ) =>  {
       if(fieldsInfo[fieldName].isRequired){
         if(fieldsInfo[fieldName].type == 'email' && !emailCheck.test(field[fieldName])) 
           enable = false;
-        if((fieldsInfo[fieldName].type == 'password') && (field[fieldName].length < 8))
+        if((fieldsInfo[fieldName].type == 'password') && field[fieldName] && (field[fieldName].length < 8))
           enable = false;
       }
     });
