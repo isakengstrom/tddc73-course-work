@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, } from 'react-native';
 import PropTypes from 'prop-types';
+import { specialCharsCheck, numbCheck, lowerCaseCheck, upperCaseCheck } from './Checks';
 
 //Make strength bar customizable
 /*Consider the following rules, for each rules followed add a point to the 
@@ -15,46 +16,49 @@ Has more than 12 characters
 This would result in 6 levels of password strength depending on how many of the above 
 mentioned criteria are being met.*/
 
-const PasswordValidator = ( props ) => {
-  const specialCharsCheck = /[!@#$%^&*(),.?":{}|<>=/€¨'-_´`]/;
-  const numbCheck = /\d/;
-  const lowerCaseCheck = /[a-z]/;
-  const upperCaseCheck = /[A-Z]/;
-  let strength = 0;
 
-    if(props.password.length > 8) {
-      strength++; 
+const PasswordValidator = ( props ) => {
+  const [strength, setStrength] = useState(0); 
+  
+  useEffect(() => {
+    let totalStrength = 0;
+    
+    if(props.password.length >= 8) {
+      totalStrength++; 
     }
     if(props.password.length > 12) {
-      strength++; 
+      totalStrength++;
     }
     if(specialCharsCheck.test(props.password)) {
-      strength++; 
+      totalStrength++; 
     }
     if(numbCheck.test(props.password)) {
-      strength++; 
+      totalStrength++; 
     }
     if(lowerCaseCheck.test(props.password) && upperCaseCheck.test(props.password)) {
-      strength++; 
+      totalStrength++; 
     }
-  
+    
+    setStrength(totalStrength);
+  }, [props.password]);
   const status = () => {
-    const arr = [0, 1, 2, 3, 4, 5];  
-    const colors = ['#d9543f', '#d9543f', '#f0ad4e', '#f0ad4e', '#5cb85c', '#5cb85c']    
+    const arr = [0, 1, 2, 3, 4];  
+    const colors = ['#d9543f', '#d9543f', '#f0ad4e', '#f0ad4e', '#5cb85c']    
     
     return(
       <View style={{flexDirection: 'row', marginRight: 5, alignSelf: 'flex-end'}}>
         <Text style={styles.feedbackText}>
           {(props.password.length == 0 ) ? ''
-            : (props.password.length < 8) ? 'Too short' 
+            : !(props.password.length >= 8) ? 'Too short' 
             : (strength < 2) ? 'Weak' 
-            : ((strength < 4) ? 'Medium' 
-            : 'Strong')}
+            : (strength < 4) ? 'Medium' 
+            : ((strength < 5) ? 'Strong' 
+            : 'Very Strong')}
         </Text>
         {arr.map((circle) => (
           <View 
             key={circle} 
-            style={[styles.circle, (strength >= circle && props.password.length >= 8) ? {backgroundColor: colors[strength]} : null]}>
+            style={[styles.circle, (strength > circle && props.password.length >= 8) ? {backgroundColor: colors[strength-1]} : null]}>
           </View>
         ))}
       </View>

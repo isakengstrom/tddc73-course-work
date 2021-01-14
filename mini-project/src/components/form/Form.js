@@ -29,7 +29,7 @@ const Form = ( props ) =>  {
 
   // State managing the text in all the fields
   const [field, setField] = useState(useMemo(() => {
-    
+    let number = 1;
     // Map over the nested arrays in the props fields array
     props.fields.map((edge, eInd) => {
       edge.map((node, nInd) => {
@@ -45,9 +45,11 @@ const Form = ( props ) =>  {
             key: node.key || defaultFieldProps[node.type].key,
             isRequired: node.isRequired || defaultFieldProps[node.type].isRequired,
             caseSensitive: node.caseSensitive || defaultFieldProps[node.type].caseSensitive,
+            fieldNumber: number,
           } 
         }
 
+        number++
         // initialFields sets states and their values to ''
         initialFields = {
           ...initialFields,
@@ -184,7 +186,6 @@ const Form = ( props ) =>  {
 
   // Render all the fields and their connected info 
   const renderFields = () => {
-    let fieldNumber = 0;
     return(
       <View >
         {props.fields.map((edge, eIndex) => {
@@ -246,7 +247,7 @@ const Form = ( props ) =>  {
                 // Get the field number if the fieldNumbering prop is true
                 const getFieldNumber = () => {
                   if(props.fieldNumbering) 
-                    return fieldNumber + '. ';
+                    return fieldsInfo[getFieldName()].fieldNumber + '. ';
                 }
 
                 // Check if the field is required and if a submit has been attempted
@@ -280,8 +281,6 @@ const Form = ( props ) =>  {
                   }
                   return false;
                 }
-                
-                fieldNumber++
 
                 // Main part of the field rendering
                 return(
